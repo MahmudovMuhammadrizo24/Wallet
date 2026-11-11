@@ -1,0 +1,8 @@
+# Netlify va Cloudflare Pages shu faylni o'qiydi. <meta> CSP bilan ifodalab bo'lmaydigan himoyalar:
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Content-Security-Policy: frame-ancestors 'none'
+  Permissions-Policy: camera=(self), microphone=(), geolocation=(), payment=()
+/sw.js
+  Cache-Control: no-cache
