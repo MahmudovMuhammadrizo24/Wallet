@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-NE4skdrr1J82zyM/VxPUChd2aI00Xugq+NHaahtPXCI='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-crv/gCf2Q5tgjA3Re4FMke33QXKFFU2dpaAQQ6gy8co='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="theme-color" content="#08111f">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -333,6 +333,28 @@ button.sm{min-height:44px;min-width:44px}
 .warn.lim{background:#fde8e6;border:1px solid #f0b3ae;color:#7a1610;font-weight:600}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) .warn.lim{background:#3a1512;border-color:#7a2a24;color:#ffd7d3}}
 :root[data-theme=dark] .warn.lim{background:#3a1512;border-color:#7a2a24;color:#ffd7d3}
+#pg-add .addtk{background:transparent;border:0;padding:0;box-shadow:none}
+.addtk .step{display:flex;flex-direction:column;gap:8px;margin:0 0 16px}
+.addtk .stl{font-size:14px;font-weight:600}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tile{min-height:64px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--txt);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:600;padding:6px 4px;text-align:center}
+.tile .ti{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:color-mix(in srgb,var(--c) 30%,transparent);color:light-dark(color-mix(in srgb,var(--c) 55%,#000),var(--c))}
+.tile[aria-checked=true]{border:2px solid var(--sky);background:var(--s2);color:var(--sky);font-weight:700;padding:5px 3px}
+.addlist{background:var(--card);border:1px solid var(--line);border-radius:20px;display:flex;flex-direction:column;overflow:hidden}
+.addrow{display:flex;align-items:center;gap:12px;min-height:64px;padding:0 16px;border:0;border-bottom:1px solid var(--s2);background:transparent;color:var(--txt);text-align:left;width:100%;font:inherit;border-radius:0}
+.addrow:last-child{border-bottom:0}
+.addrow .a-t{flex:1;min-width:0}
+.addrow .a-n{font-weight:600;font-size:15px;display:block}
+.sr select{min-width:44px;min-height:44px}
+.addrow .a-s{font-size:13px;color:var(--mut);display:block}
+.addrow .st{font-size:13px;font-weight:600;color:var(--sky);white-space:nowrap}
+.addrow[aria-pressed=true]{background:var(--s2)}
+.addrow[aria-pressed=true] .st{font-weight:700}
+.addrow.done{cursor:default}
+.addrow.done .st{color:var(--ok-tx,#0f6b46)}
+.addrow.nob .st{color:var(--mut)}
+#tk-add{width:100%;min-height:54px;border-radius:27px;font-size:16px;font-weight:700;margin-top:12px}
+.addtk .lnk{background:transparent;color:var(--sky);min-height:44px;font-weight:700;width:100%;margin-top:4px}
 /* Mining sahifasi */
 .card .sect{align-items:center;margin:0 0 12px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;align-items:end}
@@ -3775,7 +3797,18 @@ function showMain() {
   </section>
   <section class="page" id="pg-add" hidden>
     <h1 class="ph" tabindex="-1">Aktiv qo'shish</h1>
-  <section class="card">
+  <section class="card addtk" aria-labelledby="tk-h">
+    <h2 class="sr" id="tk-h">Tarmoq tangalari va tokenlar</h2>
+    <div class="step"><span class="stl" id="ad-s1">1. Tarmoqni tanlang</span><div class="tiles" id="ad-nets" role="radiogroup" aria-labelledby="ad-s1"></div></div>
+    <div class="step"><span class="stl" id="ad-s2">2. Aktivni tanlang</span><div class="addlist" id="ad-list" role="group" aria-labelledby="ad-s2"></div>
+      <button type="button" class="lnk" id="ad-all" hidden>Tarmoqdagi hammasini qo'shish</button></div>
+    <div class="sr"><select id="tk-sel" aria-label="Aktiv"><option value="ALL">Hammasini qo'shish (barcha tarmoqlar)</option><optgroup label="Ethereum"><option value="USDC_ERC20">USDC</option><option value="DAI_ERC20">DAI</option><option value="WBTC_ERC20">WBTC</option><option value="LINK_ERC20">LINK</option><option value="UNI_ERC20">UNI</option><option value="SHIB_ERC20">SHIB</option><option value="AAVE_ERC20">AAVE</option><option value="PEPE_ERC20">PEPE</option><option value="LDO_ERC20">LDO</option><option value="CRV_ERC20">CRV</option></optgroup><optgroup label="Tron"><option value="USDC_TRC20">USDC (TRC-20)</option></optgroup><optgroup label="Solana (faqat qabul qilish)"><option value="USDT_SOLANA">USDT</option><option value="USDC_SOLANA">USDC</option></optgroup><optgroup label="TON (faqat qabul qilish)"><option value="USDT_TON">USDT</option></optgroup><optgroup label="Polygon"><option value="POL">POL (komissiya uchun)</option><option value="USDT_POLYGON">USDT</option><option value="USDC_POLYGON">USDC</option></optgroup><optgroup label="Arbitrum One"><option value="ETH_ARB">ETH (komissiya uchun)</option><option value="USDT_ARBITRUM">USDT</option><option value="USDC_ARBITRUM">USDC</option></optgroup><optgroup label="Optimism"><option value="ETH_OP">ETH (komissiya uchun)</option><option value="USDT_OPTIMISM">USDT</option><option value="USDC_OPTIMISM">USDC</option></optgroup><optgroup label="Avalanche C-Chain"><option value="AVAX">AVAX (komissiya uchun)</option><option value="USDT_AVALANCHE">USDT</option><option value="USDC_AVALANCHE">USDC</option></optgroup><optgroup label="BNB Chain"><option value="BNB">BNB (komissiya uchun)</option><option value="USDT_BSC">USDT</option><option value="USDC_BSC">USDC (Binance-Peg)</option></optgroup></select></div>
+    <button type="button" id="tk-add">Qo'shish</button>
+    <div class="msg" id="tk-msg" role="status" aria-live="polite"></div>
+    <div class="warn">Yangi manzil kerak emas: Ethereum manzilingiz Polygon, Arbitrum, Optimism, Avalanche va BNB Chain'da ham ishlaydi. Har bir tarmoqda komissiya shu tarmoqning o'z tangasida to'lanadi (POL, AVAX, BNB yoki ETH), shuning uchun u ham kerak bo'ladi. Tarmoqni adashtirmang: boshqa tarmoqqa yuborilgan pul qaytmasligi mumkin. Bu tarmoqlar yangi qo'shilgan, avval kichik summa bilan sinab ko'ring.</div>
+  </section>
+  <section class="card addform" aria-labelledby="fm-h">
+    <h2 id="fm-h">Boshqa manzil qo'shish</h2>
     <p class="mut" style="margin-top:-6px">Boshqa hamyon yoki birjadagi aktivlaringizni shu yerda bir joyda ko'rasiz.</p>
     <form id="add">
       <div class="grid">
@@ -3798,12 +3831,6 @@ function showMain() {
       <button type="submit" class="w100">Qo'shish</button>
       <div class="msg" id="msg" role="status" aria-live="polite"></div>
     </form>
-  </section>
-  <section class="card" aria-labelledby="tk-h">
-    <h2 id="tk-h">Tarmoq tangalari va tokenlar</h2>
-    <p class="mut">Mavjud manzilingizda tarmoq tangalarini (POL, AVAX, BNB, ETH) va tokenlarni (USDT, USDC, DAI, WBTC, LINK, UNI, SHIB) ko'rish, qabul qilish va yuborish uchun qo'shing. Yangi manzil kerak emas: Ethereum manzilingiz Polygon, Arbitrum, Optimism, Avalanche va BNB Chain'da ham ishlaydi. Har bir tarmoqda komissiya shu tarmoqning o'z tangasida to'lanadi (POL, AVAX, BNB yoki ETH), shuning uchun u ham kerak bo'ladi. Tarmoqni adashtirmang: boshqa tarmoqqa yuborilgan pul qaytmasligi mumkin. Bu tarmoqlar yangi qo'shilgan, avval kichik summa bilan sinab ko'ring.</p>
-    <div class="inrow"><select id="tk-sel" aria-label="Aktiv"><option value="ALL">Hammasini qo'shish (barcha tarmoqlar)</option><optgroup label="Ethereum"><option value="USDC_ERC20">USDC</option><option value="DAI_ERC20">DAI</option><option value="WBTC_ERC20">WBTC</option><option value="LINK_ERC20">LINK</option><option value="UNI_ERC20">UNI</option><option value="SHIB_ERC20">SHIB</option><option value="AAVE_ERC20">AAVE</option><option value="PEPE_ERC20">PEPE</option><option value="LDO_ERC20">LDO</option><option value="CRV_ERC20">CRV</option></optgroup><optgroup label="Tron"><option value="USDC_TRC20">USDC (TRC-20)</option></optgroup><optgroup label="Solana (faqat qabul qilish)"><option value="USDT_SOLANA">USDT</option><option value="USDC_SOLANA">USDC</option></optgroup><optgroup label="TON (faqat qabul qilish)"><option value="USDT_TON">USDT</option></optgroup><optgroup label="Polygon"><option value="POL">POL (komissiya uchun)</option><option value="USDT_POLYGON">USDT</option><option value="USDC_POLYGON">USDC</option></optgroup><optgroup label="Arbitrum One"><option value="ETH_ARB">ETH (komissiya uchun)</option><option value="USDT_ARBITRUM">USDT</option><option value="USDC_ARBITRUM">USDC</option></optgroup><optgroup label="Optimism"><option value="ETH_OP">ETH (komissiya uchun)</option><option value="USDT_OPTIMISM">USDT</option><option value="USDC_OPTIMISM">USDC</option></optgroup><optgroup label="Avalanche C-Chain"><option value="AVAX">AVAX (komissiya uchun)</option><option value="USDT_AVALANCHE">USDT</option><option value="USDC_AVALANCHE">USDC</option></optgroup><optgroup label="BNB Chain"><option value="BNB">BNB (komissiya uchun)</option><option value="USDT_BSC">USDT</option><option value="USDC_BSC">USDC (Binance-Peg)</option></optgroup></select><button type="button" id="tk-add">Qo'shish</button></div>
-    <div class="msg" id="tk-msg" role="status" aria-live="polite"></div>
   </section>
     <div class="group"><a class="rowlink" href="#/wallets"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 7l3 3"/></svg></span><span><b>Boshqa hamyonni so'zlar bilan qo'shish</b><small>12 so'zdan barcha manzillarni bir yo'la qo'shing</small></span><svg viewBox="0 0 24 24" class="ch" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a></div>
   </section>
@@ -3840,7 +3867,7 @@ function showMain() {
     <h2 class="pgh st">Ko'rinish</h2>
     <section class="card"><h2 id="theme-h">Mavzu</h2><div class="seg" id="theme-seg" role="group" aria-labelledby="theme-h"></div></section>
     <button type="button" id="set-lock" class="sec w100">Hamyonni qulflash</button>
-    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 30</p>
+    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 31</p>
   </section>
   <section class="page" id="pg-backup" hidden>
     <h1 class="ph" tabindex="-1">Zaxira nusxa</h1>
@@ -3895,7 +3922,7 @@ function showMain() {
         <li>Yangi manzilga yuborishda oxirgi 6 belgini yozish talab qilinadi. Saqlangan manzillarga o'xshash manzil chiqsa, ogohlantiriladi.</li>
       </ul>
     </details>
-    <p class="mut">Versiya 30. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
+    <p class="mut">Versiya 31. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
   </section>
   </section>
   <section class="page" id="pg-mining" hidden>
@@ -4206,7 +4233,7 @@ const fmtAmt = n => n.toLocaleString('en-US', { maximumFractionDigits: 8 });
 const mask = s => hidden ? '••••' : s;
 const amountOf = it => it.kind === 'manual' ? Number(it.amount) : balances[it.id];
 
-let NETF = 'ALL', ROWACT = null, ROWMENU = null;
+let NETF = 'ALL', ROWACT = null, ROWMENU = null, PAINTADD = null;
 const COLL = (() => { try { return new Set(JSON.parse(store.get('cw_coll') || '[]')); } catch (e) { return new Set(); } })();
 const saveColl = () => store.set('cw_coll', JSON.stringify([...COLL]));
 function updateView() {
@@ -4248,6 +4275,7 @@ function updateView() {
   { const nc = $('#net-chips'), vg = viewGroups().filter(g => g.items.length);
     if (NETF !== 'ALL' && !vg.some(g => g.id === NETF)) NETF = 'ALL';
     if (nc) nc.innerHTML = vg.length > 1 ? [{ id: 'ALL', name: 'Hammasi' }].concat(vg).map(g => '<button type="button" class="chip" data-f="' + g.id + '" aria-pressed="' + (NETF === g.id) + '">' + esc(g.id === 'OTH' ? 'Boshqa' : g.name) + '</button>').join('') : ''; }
+  if (PAINTADD) PAINTADD();
   $('#empty').hidden = data.items.length > 0;
   const hl = $('#home-list');
   if (hl) {
@@ -4987,7 +5015,34 @@ async function addTokens(keys, say) {
   updateView(); refresh();
 }
 function initTokens() {
+  let adNet = 'ETH', adSel = null, selTouched = false;
+  const GC = { ETH: 'ETH', TRX: 'TRX', SOL: 'SOL', TON: 'TON', POLY: 'ETH', ARB: 'ETH', OP: 'ETH', AVAX: 'ETH', BSC: 'ETH' };
+  const shortNet = n => n.replace(' One', '').replace(' C-Chain', '');
+  const isDone = k => baseItems(k).length > 0 && !offerFor(NETOF[k]).includes(k);
+  const paintAdd = () => {
+    if (!data || !$('#ad-nets')) return;
+    const nets = NETG.filter(([id]) => id !== 'BTC' && id !== 'OTH' && POPULAR.some(k => NETOF[k] === id && ADDBASE(k)));
+    if (!nets.some(n => n[0] === adNet)) adNet = nets.length ? nets[0][0] : 'ETH';
+    $('#ad-nets').innerHTML = nets.map(([id, name]) => { const sy = GC[id] || 'ETH';
+      return '<button type="button" class="tile" role="radio" aria-checked="' + (id === adNet) + '" data-n="' + id + '"><span class="ti" aria-hidden="true" style="--c:' + (CCOL[sy] || 'var(--coin-other)') + '">' + (GLYPH[sy] || esc(name.slice(0, 1))) + '</span>' + esc(shortNet(name)) + '</button>'; }).join('');
+    const keys = POPULAR.filter(k => NETOF[k] === adNet && ADDBASE(k));
+    if (adSel && !keys.includes(adSel)) adSel = null;
+    if (adSel && isDone(adSel)) adSel = null;
+    $('#ad-list').innerHTML = keys.map(k => { const sym = COINS[k].sym, done = isDone(k), nob = baseItems(k).length === 0;
+      const st = done ? '<span class="st">✓ Qo\'shilgan</span>' : nob ? '<span class="st">Manzil yo\'q</span>' : '<span class="st">' + (adSel === k ? '✓ Tanlangan' : 'Tanlash') + '</span>';
+      return '<button type="button" class="addrow' + (done ? ' done' : '') + (nob ? ' nob' : '') + '" data-k="' + k + '" aria-pressed="' + (adSel === k) + '"' + (done || nob ? ' aria-disabled="true"' : '') + ' aria-label="' + esc(sym + ' ' + optLabel(k) + (done ? ', qo\'shilgan' : nob ? ', manzil yo\'q' : '')) + '"><span class="ci" aria-hidden="true" style="--c:' + (CCOL[sym] || 'var(--coin-other)') + '">' + (GLYPH[sym] || esc(String(sym).slice(0, 1))) + '</span><span class="a-t"><span class="a-n">' + esc(String(COINS[k].name || sym).split(' (')[0]) + '</span><span class="a-s">' + esc(sym + ' · ' + shortNet(((NETG.find(n => n[0] === adNet)) || ['', ''])[1])) + '</span></span>' + st + '</button>'; }).join('');
+    const rest = keys.filter(k => !isDone(k) && baseItems(k).length > 0);
+    $('#ad-all').hidden = rest.length < 2;
+    $('#tk-add').textContent = adSel ? COINS[adSel].sym + ' ni qo\'shish' : 'Qo\'shish';
+  };
+  PAINTADD = paintAdd; paintAdd();
+  $('#tk-sel').addEventListener('change', () => { selTouched = true; });
+  $('#ad-nets').addEventListener('click', e => { const t = e.target.closest('button.tile'); if (!t) return; adNet = t.dataset.n; adSel = null; paintAdd(); const nb = document.querySelector('#ad-nets .tile[data-n="' + adNet + '"]'); if (nb) nb.focus(); });
+  $('#ad-list').addEventListener('click', e => { const r = e.target.closest('button.addrow'); if (!r || r.getAttribute('aria-disabled') === 'true') return; adSel = adSel === r.dataset.k ? null : r.dataset.k; paintAdd(); const nb = document.querySelector('#ad-list .addrow[data-k="' + r.dataset.k + '"]'); if (nb) nb.focus(); });
+  $('#ad-all').onclick = () => { const keys = POPULAR.filter(k => NETOF[k] === adNet && ADDBASE(k) && baseItems(k).length && !isDone(k)); if (keys.length) { adSel = null; addTokens(keys, t => { $('#tk-msg').textContent = t; }); } };
   $('#tk-add').onclick = () => {
+    if (adSel) { const k = adSel; adSel = null; return addTokens([k], t => { $('#tk-msg').textContent = t; }); }
+    if (!selTouched) { $('#tk-msg').textContent = 'Avval ro\'yxatdan aktivni tanlang.'; return; }
     const sel = $('#tk-sel').value, keys = sel === 'ALL' ? TOK_ALL : [sel];
     if (!keys.every(k => ADDBASE(k))) return;
     return addTokens(keys, t => { $('#tk-msg').textContent = t; });
