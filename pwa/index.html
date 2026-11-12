@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-3G8VG8/9vNtCyAqE71x/SQHYdbLPCITbxOLKVLxmK4s='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-NE4skdrr1J82zyM/VxPUChd2aI00Xugq+NHaahtPXCI='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="theme-color" content="#08111f">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -3840,7 +3840,7 @@ function showMain() {
     <h2 class="pgh st">Ko'rinish</h2>
     <section class="card"><h2 id="theme-h">Mavzu</h2><div class="seg" id="theme-seg" role="group" aria-labelledby="theme-h"></div></section>
     <button type="button" id="set-lock" class="sec w100">Hamyonni qulflash</button>
-    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 29</p>
+    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 30</p>
   </section>
   <section class="page" id="pg-backup" hidden>
     <h1 class="ph" tabindex="-1">Zaxira nusxa</h1>
@@ -3895,7 +3895,7 @@ function showMain() {
         <li>Yangi manzilga yuborishda oxirgi 6 belgini yozish talab qilinadi. Saqlangan manzillarga o'xshash manzil chiqsa, ogohlantiriladi.</li>
       </ul>
     </details>
-    <p class="mut">Versiya 29. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
+    <p class="mut">Versiya 30. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
   </section>
   </section>
   <section class="page" id="pg-mining" hidden>
@@ -4642,9 +4642,10 @@ function initPin() {
   };
   $('#pin-set').onclick = async () => {
     const phrase = await verifyWords(note); if (!phrase) return;
-    const p1 = await ask('Yangi PIN kiriting (6-12 raqam). Qancha uzun bo\'lsa, shuncha xavfsiz: 8 va undan ko\'p raqam tavsiya etiladi. 123456 yoki 000000 kabi oson PIN qabul qilinmaydi.', { input: true, secret: 'pin', ok: 'Davom etish' });
+    const p1 = await ask('Yangi PIN kiriting (8-12 raqam). Qancha uzun bo\'lsa, shuncha xavfsiz. 12345678 yoki 00000000 kabi oson PIN qabul qilinmaydi. Katta summa uchun parol yoki maxfiy so\'zlar xavfsizroq.', { input: true, secret: 'pin', ok: 'Davom etish' });
     if (p1 === null) return;
-    if (!/^\d{6,12}$/.test(p1)) return note('PIN 6 dan 12 gacha raqamdan iborat bo\'lishi kerak.');
+    if (/^\d+$/.test(p1) && pinWeak(p1)) return note('Bu PIN juda oson. Boshqasini tanlang.');
+    if (!/^\d{8,12}$/.test(p1)) return note('Yangi PIN 8 dan 12 gacha raqamdan iborat bo\'lishi kerak.');
     if (pinWeak(p1)) return note('Bu PIN juda oson. Boshqasini tanlang.');
     const p2 = await ask('PIN ni qayta kiriting.', { input: true, secret: 'pin', ok: 'Tasdiqlash' });
     if (p2 === null) return;

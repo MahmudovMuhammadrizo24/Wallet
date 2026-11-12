@@ -21,25 +21,25 @@ const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratc
  ok('cspWasmOnly',await pg.evaluate(()=>{const c=document.querySelector('meta[http-equiv="Content-Security-Policy"]').content;return /script-src 'wasm-unsafe-eval' 'sha256/.test(c)&&!/unsafe-eval'(?!.*wasm)/.test(c.replace("'wasm-unsafe-eval'",''))&&!/script-src[^;]*'unsafe-inline'/.test(c)}));
  // Argon2id ma'lum javob (hash-wasm npm'i bilan solishtirilgan)
  const kat=await pg.evaluate(async()=>Array.from(await hashwasm.argon2id({password:'pin:123456',salt:new Uint8Array(16).fill(7),parallelism:1,iterations:3,memorySize:65536,hashLength:32,outputType:'binary'})).map(x=>x.toString(16).padStart(2,'0')).join(''));
- const ref=require('/tmp/hw/node_modules/hash-wasm'); const exp=Buffer.from(await ref.argon2id({password:'pin:123456',salt:new Uint8Array(16).fill(7),parallelism:1,iterations:3,memorySize:65536,hashLength:32,outputType:'binary'})).toString('hex');
+ const ref=(()=>{try{return require('hash-wasm')}catch(e){return require('/tmp/hw/node_modules/hash-wasm')}})(); const exp=Buffer.from(await ref.argon2id({password:'pin:123456',salt:new Uint8Array(16).fill(7),parallelism:1,iterations:3,memorySize:65536,hashLength:32,outputType:'binary'})).toString('hex');
  R.kat={got:kat,exp}; ok('argon2MatchesReference',kat===exp&&kat.length===64);
  // PIN o'rnatish -> yangi format
  await pg.evaluate(()=>{location.hash='#/security'}); await pg.waitForSelector('#pin-set'); const t0=Date.now();
- await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('482915'); await dlg('482915');
+ await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('48291537'); await dlg('48291537');
  await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes("o'rnatildi"),null,{timeout:30000}); R.setMs=Date.now()-t0;
  const st=await pg.evaluate(()=>localStorage.getItem('cw_pin')); ok('pinFormatV2',st.startsWith('v2.')); ok('pinNoPlaintext',!words.some(w=>w.length>4&&st.includes(w)));
  // eski (PBKDF2) formatga tushirib, kirish -> avtomatik yangilanadi
- await pg.evaluate(async(w)=>{const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},await deriveKey('pin:482915',salt),enc.encode(w)));const o=new Uint8Array(28+ct.length);o.set(salt);o.set(iv,16);o.set(ct,28);localStorage.setItem('cw_pin',b64(o));localStorage.setItem('cw_pinfail','2')},words.join(' '));
+ await pg.evaluate(async(w)=>{const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},await deriveKey('pin:48291537',salt),enc.encode(w)));const o=new Uint8Array(28+ct.length);o.set(salt);o.set(iv,16);o.set(ct,28);localStorage.setItem('cw_pin',b64(o));localStorage.setItem('cw_pinfail','2')},words.join(' '));
  ok('legacyHasNoPrefix',!(await pg.evaluate(()=>localStorage.getItem('cw_pin'))).startsWith('v2.'));
  await pg.reload(); await pg.waitForSelector('#pin-in'); 
  await pg.fill('#pin-in','111222'); await pg.click('#pin-go'); await pg.waitForFunction(()=>document.querySelector('#pin-msg').textContent.includes('Qolgan'),null,{timeout:30000}); R.legacyWrong=await pg.$eval('#pin-msg',e=>e.textContent); ok('legacyWrongCounts',/Qolgan urinish: 2/.test(R.legacyWrong));
- const t1=Date.now(); await pg.fill('#pin-in','482915'); await pg.click('#pin-go'); await pg.waitForSelector('.page:not([hidden])',{timeout:40000}); R.unlockMs=Date.now()-t1; ok('legacyUnlocks',true);
+ const t1=Date.now(); await pg.fill('#pin-in','48291537'); await pg.click('#pin-go'); await pg.waitForSelector('.page:not([hidden])',{timeout:40000}); R.unlockMs=Date.now()-t1; ok('legacyUnlocks',true);
  ok('legacyUpgraded',(await pg.evaluate(()=>localStorage.getItem('cw_pin'))).startsWith('v2.')); 
  // yangilangandan keyin ham ishlaydi, xato PIN rad etiladi
- await pg.click('#lock'); await pg.waitForSelector('#pin-in'); await pg.fill('#pin-in','482915'); await pg.click('#pin-go'); await pg.waitForSelector('.page:not([hidden])',{timeout:40000}); ok('v2Unlocks',true);
+ await pg.click('#lock'); await pg.waitForSelector('#pin-in'); await pg.fill('#pin-in','48291537'); await pg.click('#pin-go'); await pg.waitForSelector('.page:not([hidden])',{timeout:40000}); ok('v2Unlocks',true);
  await pg.click('#lock'); await pg.waitForSelector('#pin-in'); await pg.fill('#pin-in','999111'); await pg.click('#pin-go'); await pg.waitForFunction(()=>/Qolgan/.test(document.querySelector('#pin-msg').textContent),null,{timeout:30000}); ok('v2WrongRejected',true);
  // buzilgan blob: qulf ochilmaydi, JS xatosiz
- await pg.evaluate(()=>{const s=localStorage.getItem('cw_pin');localStorage.setItem('cw_pin',s.slice(0,-6)+'AAAAAA')}); await pg.fill('#pin-in','482915'); await pg.click('#pin-go'); await pg.waitForFunction(()=>/Qolgan|noto'g'ri/.test(document.querySelector('#pin-msg').textContent),null,{timeout:30000}); ok('tamperedRejected',await pg.$('.page:not([hidden])')===null);
+ await pg.evaluate(()=>{const s=localStorage.getItem('cw_pin');localStorage.setItem('cw_pin',s.slice(0,-6)+'AAAAAA')}); await pg.fill('#pin-in','48291537'); await pg.click('#pin-go'); await pg.waitForFunction(()=>/Qolgan|noto'g'ri/.test(document.querySelector('#pin-msg').textContent),null,{timeout:30000}); ok('tamperedRejected',await pg.$('.page:not([hidden])')===null);
  ok('timingReasonable',R.unlockMs<15000);
  R.errs=errs; ok('noJsErrors',errs.length===0);
  console.log(JSON.stringify(R,null,1)); await b.close(); srv.close(); process.exit(bad?1:0);

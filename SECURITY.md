@@ -1,8 +1,8 @@
-# Xavfsizlik holati (v29)
+# Xavfsizlik holati (v30)
 
 ## Himoyalar
 - Seed qurilmada AES-256-GCM bilan shifrlanadi (PBKDF2 600 000 + 12 so'zdan olingan kalit).
-- PIN/parol: Argon2id (64 MiB, 3 o'tish). Android ilovada qo'shimcha Keystore "pepper" (v3) — blob boshqa qurilmada ochilmaydi.
+- PIN/parol: Argon2id (64 MiB, 3 o'tish). Yangi PIN kamida 8 raqam (eski 6-7 xonali PIN ochilishda ishlaydi). Android ilovada qo'shimcha Keystore "pepper" (v3) — blob boshqa qurilmada ochilmaydi.
 - Kunlik yuborish limiti (standart 1000 USD / 24 soat). Limitdan oshgan yuborish bloklanadi; limitni o'zgartirish uchun maxfiy so'zlar kerak.
 - Har yuborishda maxfiy so'zlarni qayta kiritish, manzil oxirgi 6 belgisini yozish, o'xshash manzil (poisoning) ogohlantirishi.
 - CSP: skriptlar faqat hash bilan, 'wasm-unsafe-eval' faqat Argon2 uchun; tarmoq faqat ruxsat etilgan RPC'lar.

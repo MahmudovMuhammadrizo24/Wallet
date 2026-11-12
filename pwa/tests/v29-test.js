@@ -19,22 +19,22 @@ const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratc
  const dlg=async v=>{await pg.waitForSelector('#dlg-in'); await pg.fill('#dlg-in',v); await pg.click('#dlg-ok'); await pg.waitForTimeout(150)};
  const ph=words.join(' ');
  await pg.evaluate(()=>{location.hash='#/security'}); await pg.waitForSelector('#pin-set');
- await pg.click('#pin-set'); await dlg(ph); await dlg('482915'); await dlg('482915'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes("o'rnatildi"),null,{timeout:30000});
+ await pg.click('#pin-set'); await dlg(ph); await dlg('48291537'); await dlg('48291537'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes("o'rnatildi"),null,{timeout:30000});
  ok('v3WhenKeystorePresent',(await pg.evaluate(()=>localStorage.getItem('cw_pin'))).startsWith('v3.'));
  const unlock=async(pin,wait='.page:not([hidden])')=>{await pg.waitForSelector('#pin-in'); await pg.fill('#pin-in',pin); await pg.click('#pin-go'); await pg.waitForSelector(wait,{timeout:40000})};
- await pg.click('#lock'); await unlock('482915'); ok('v3Unlocks',true);
+ await pg.click('#lock'); await unlock('48291537'); ok('v3Unlocks',true);
  // boshqa muhit (Keystore yo'q): blob ochilmaydi, urinish sanalmaydi, hamyon ochilmaydi
  await pg.click('#lock'); await pg.evaluate(()=>{localStorage.setItem('__nomock','1')}); await pg.reload(); await pg.waitForSelector('#pin-in');
- const f0=await pg.evaluate(()=>localStorage.getItem('cw_pinfail')); await pg.fill('#pin-in','482915'); await pg.click('#pin-go'); await pg.waitForFunction(()=>/Android/.test(document.querySelector('#pin-msg').textContent),null,{timeout:30000});
+ const f0=await pg.evaluate(()=>localStorage.getItem('cw_pinfail')); await pg.fill('#pin-in','48291537'); await pg.click('#pin-go'); await pg.waitForFunction(()=>/Android/.test(document.querySelector('#pin-msg').textContent),null,{timeout:30000});
  ok('noKeystoreCannotOpen',await pg.$('.page:not([hidden])')===null); ok('noKeystoreDoesNotBurnAttempts',(await pg.evaluate(()=>localStorage.getItem('cw_pinfail')))===f0);
  // brauzer muhitida PIN qayta o'rnatilsa v2
- await pg.evaluate(async(p)=>{await pinSeal(p,'482915','pin')},ph); ok('browserFallsBackToV2',(await pg.evaluate(()=>localStorage.getItem('cw_pin'))).startsWith('v2.'));
+ await pg.evaluate(async(p)=>{await pinSeal(p,'48291537','pin')},ph); ok('browserFallsBackToV2',(await pg.evaluate(()=>localStorage.getItem('cw_pin'))).startsWith('v2.'));
  // keyin Keystore paydo bo'lsa: v2 -> v3 ga avtomatik yangilanadi
- await pg.evaluate(()=>{localStorage.removeItem('__nomock')}); await pg.reload(); await unlock('482915'); ok('v2UpgradesToV3',(await pg.evaluate(()=>localStorage.getItem('cw_pin'))).startsWith('v3.'));
+ await pg.evaluate(()=>{localStorage.removeItem('__nomock')}); await pg.reload(); await unlock('48291537'); ok('v2UpgradesToV3',(await pg.evaluate(()=>localStorage.getItem('cw_pin'))).startsWith('v3.'));
  // Keystore kaliti o'zgarsa (boshqa qurilma / kalit o'chgan): noto'g'ri PIN kabi rad etiladi
- await pg.click('#lock'); await pg.evaluate(()=>{localStorage.setItem('__sec','3C')}); await pg.reload(); await pg.waitForSelector('#pin-in'); await pg.fill('#pin-in','482915'); await pg.click('#pin-go'); await pg.waitForFunction(()=>/Qolgan/.test(document.querySelector('#pin-msg').textContent),null,{timeout:30000});
+ await pg.click('#lock'); await pg.evaluate(()=>{localStorage.setItem('__sec','3C')}); await pg.reload(); await pg.waitForSelector('#pin-in'); await pg.fill('#pin-in','48291537'); await pg.click('#pin-go'); await pg.waitForFunction(()=>/Qolgan/.test(document.querySelector('#pin-msg').textContent),null,{timeout:30000});
  ok('wrongPepperRejected',await pg.$('.page:not([hidden])')===null);
- await pg.evaluate(()=>{localStorage.setItem('__sec','A5')}); await pg.reload(); await unlock('482915'); ok('restoredPepperUnlocks',true);
+ await pg.evaluate(()=>{localStorage.setItem('__sec','A5')}); await pg.reload(); await unlock('48291537'); ok('restoredPepperUnlocks',true);
  // PIN o'chirilsa Keystore kaliti ham o'chadi
  await pg.evaluate(()=>{location.hash='#/security'}); await pg.waitForSelector('#pin-off'); const c0=+(await pg.evaluate(()=>localStorage.getItem('__cleared')))||0; await pg.click('#pin-off'); await pg.click('#dlg-ok'); await pg.waitForTimeout(400);
  ok('pinOffClearsPepper',(+(await pg.evaluate(()=>localStorage.getItem('__cleared')))||0)>c0);

@@ -48,7 +48,7 @@ const R={}; const BTC_TO='bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq', SOL_TO='S
  await pg.fill('#pin-in','482915'); await pg.click('#pin-go'); await pg.waitForFunction(()=>document.querySelector('#pin-msg').textContent.includes('Qolgan'),null,{timeout:15000}); R.pinWrongInvalid=await pg.$eval('#pin-in',e=>e.getAttribute('aria-invalid'));
  await pg.fill('#pin-in','48291537'); await pg.click('#pin-go'); await pg.waitForSelector('.page:not([hidden])',{timeout:30000}); R.unlock8=true;
  // 5) 6 xonali eski PIN ham ishlaydi
- await pg.evaluate(()=>{location.hash='#/security'}); await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('482915'); await dlg('482915'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes('o\'rnatildi'),null,{timeout:15000});
+ await pg.evaluate(()=>{location.hash='#/security'}); await pg.evaluate(async p=>{await pinSeal(p,'482915','pin')},words.join(' '));
  await pg.click('#lock'); await pg.waitForSelector('#pin-in'); await pg.fill('#pin-in','482915'); await pg.click('#pin-go'); await pg.waitForSelector('.page:not([hidden])',{timeout:30000}); R.unlock6=true;
  // 6) hover / busy CSS mavjud
  R.css=await pg.evaluate(()=>{const t=[...document.styleSheets].flatMap(s=>[...s.cssRules]).map(r=>r.cssText).join('\n');return{hover:/hover:hover/.test(t),busy:/aria-busy/.test(t),coin:getComputedStyle(document.documentElement).getPropertyValue('--coin-btc').trim()}});

@@ -1,0 +1,28 @@
+name: test
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  run-all:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      # Eslatma: xavfsizlikni oshirish uchun action'larni to'liq commit SHA bilan qotiring (hozircha versiya tegi).
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Playwright va hash-wasm
+        working-directory: pwa
+        run: |
+          npm init -y >/dev/null
+          npm i --no-audit --no-fund playwright@1.63.0 hash-wasm@4.12.0
+          npx playwright install --with-deps chromium
+      - name: Barcha testlar
+        working-directory: pwa
+        run: node tests/run-all.js
+      - name: index.html hash
+        run: sha256sum -c SHA256SUMS

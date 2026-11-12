@@ -63,15 +63,15 @@ const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratc
  // qabul qilish
  await pg.evaluate(()=>{const it=data.items.find(x=>x.coin==='ETH'); location.hash='#/asset/'+it.id+'/recv'}); await pg.waitForSelector('#recv-addr'); ok('s2_recvAddrChecksum',/^0x[0-9a-fA-F]{40}$/.test((await pg.$eval('#recv-addr',e=>e.textContent)).trim())); await shot('2-recv');
  // PIN: o'rnatish -> qulflash -> xato -> to'g'ri
- await pg.evaluate(()=>{location.hash='#/security'}); await pg.waitForSelector('#pin-set'); await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('482915'); await dlg('482915');
+ await pg.evaluate(()=>{location.hash='#/security'}); await pg.waitForSelector('#pin-set'); await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('48291537'); await dlg('48291537');
  await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes("o'rnatildi"),null,{timeout:20000});
  await pg.click('#lock'); await pg.waitForSelector('#pin-in'); await shot('2-pinlock'); R.s2_lockAudit=await audit('pin');
  await pg.fill('#pin-in','111222'); await pg.click('#pin-go'); await pg.waitForFunction(()=>document.querySelector('#pin-msg').textContent.includes('Qolgan'),null,{timeout:15000});
- await pg.fill('#pin-in','482915'); await pg.click('#pin-go'); await pg.waitForSelector('.page:not([hidden])',{timeout:30000}); ok('s2_pinUnlock',true);
+ await pg.fill('#pin-in','48291537'); await pg.click('#pin-go'); await pg.waitForSelector('.page:not([hidden])',{timeout:30000}); ok('s2_pinUnlock',true);
  // sahifani yangilash -> qayta qulflanadi (sessiya saqlanmaydi)
  await pg.reload(); await pg.waitForSelector('#pin-in,#go,#t-create',{timeout:15000}); ok('s2_reloadRelocks',await pg.$('.page:not([hidden])')===null);
  // mavzu: qorong'i rejimda ham gorizontal scroll yo'q va matn kontrasti
- await pg.fill('#pin-in','482915').catch(()=>{}); await pg.click('#pin-go').catch(()=>{}); await pg.waitForSelector('.page:not([hidden])',{timeout:30000}).catch(()=>{});
+ await pg.fill('#pin-in','48291537').catch(()=>{}); await pg.click('#pin-go').catch(()=>{}); await pg.waitForSelector('.page:not([hidden])',{timeout:30000}).catch(()=>{});
  await pg.emulateMedia({colorScheme:'dark'}); await pg.waitForTimeout(300); await pg.evaluate(()=>{location.hash='#/'}); await pg.waitForTimeout(400); await shot('2-dark-home'); R.s2_dark=await audit('dark'); ok('s2_darkNoHscroll',!R.s2_dark.hscroll);
  ok('s2_noSmallTargets',Object.keys(R.s2_smallTargets).length===0&&R.s1_entry.small.length===0&&R.s2_lockAudit.small.length===0);
  R.errs=errs; ok('noJsErrors',errs.length===0);
