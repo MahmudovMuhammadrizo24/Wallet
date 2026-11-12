@@ -17,7 +17,7 @@
 
 ## Tekshirish
 ```
-cd pwa && npm i playwright && node tests/run-all.js
+cd pwa && npm i playwright hash-wasm @ton/ton @ton/core @ton/crypto tweetnacl && node tests/run-all.js
 sha256sum pwa/index.html   # SHA256SUMS bilan solishtiring
 ```
 Uchinchi tomon kutubxonasi: hash-wasm 4.12.0 (MIT), tools/argon2.umd.min.js.

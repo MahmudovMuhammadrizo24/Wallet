@@ -1,13 +1,13 @@
 const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
 const [,, dir, port] = process.argv;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
-const TR='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/tonref/node_modules/';
+const TR=(require('path').resolve(__dirname,'..','node_modules')+'/');
 const {Address,Cell,loadMessage,loadMessageRelaxed}=require(TR+'@ton/core');
 const R={}; const errs=[]; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
 const DEST=Address.parseRaw('0:'+require('crypto').createHash('sha256').update('dest').digest('hex')).toString({bounceable:false,urlSafe:true});
 const BTC_TO='bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq';
 let sentBocs=[];
-const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/shots/';
+const SH=(require('os').tmpdir()+'/hamyon-shots/');
 (async()=>{
  const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:390,height:844},serviceWorkers:'block'}); const pg=await ctx.newPage();
  pg.on('pageerror',e=>errs.push(e.message)); pg.on('console',m=>{if(m.type()==='error'&&!/Failed to load|net::ERR/.test(m.text()))errs.push(m.text().slice(0,200))});

@@ -2,7 +2,7 @@ const { chromium } = require('playwright'); const http=require('http'),fs=requir
 const [,, dir, port] = process.argv;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
 const R={}; const errs=[]; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
-const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/shots/';
+const SH=(require('os').tmpdir()+'/hamyon-shots/');
 (async()=>{
  const W=+process.env.VW||390;
  const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:W,height:844},colorScheme:'light',serviceWorkers:'block'}); const pg=await ctx.newPage(); await ctx.addInitScript(()=>{ if(!localStorage.getItem('__nomock')){ window.__cleared=0; window.HamyonNative={avail:()=>'no',clear(){},clearPepper(){localStorage.setItem('__cleared',String((+localStorage.getItem('__cleared')||0)+1))},pepper(sb){const raw=atob(sb),k=localStorage.getItem('__sec')||'A5',o=new Uint8Array(32);for(let i=0;i<32;i++)o[i]=raw.charCodeAt(i%raw.length)^parseInt(k,16)^i;return btoa(String.fromCharCode(...o))}}}});
