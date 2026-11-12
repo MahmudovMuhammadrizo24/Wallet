@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-crv/gCf2Q5tgjA3Re4FMke33QXKFFU2dpaAQQ6gy8co='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-Q4X2dh5rQhi4TphRtjUw157uyojm4ZMVCboJb2q4OM4='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="theme-color" content="#08111f">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -355,6 +355,19 @@ button.sm{min-height:44px;min-width:44px}
 .addrow.nob .st{color:var(--mut)}
 #tk-add{width:100%;min-height:54px;border-radius:27px;font-size:16px;font-weight:700;margin-top:12px}
 .addtk .lnk{background:transparent;color:var(--sky);min-height:44px;font-weight:700;width:100%;margin-top:4px}
+/* Narxlar sahifasi */
+#as-px{display:inline-flex;align-items:center;min-height:44px;min-width:44px;font-weight:600}
+.pxbar{display:flex;gap:8px;align-items:center;margin:0 0 12px}
+.pxbar input{flex:1;min-width:0;min-height:44px;border-radius:22px;border:1px solid var(--line);background:var(--card);color:var(--txt);padding:0 16px;font:inherit}
+.pxlist{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.pxlist li{display:flex;align-items:center;gap:12px;min-height:64px;padding:0 16px;border-bottom:1px solid var(--s2)}
+.pxlist li:last-child{border-bottom:0}
+.pxlist .px-t{flex:1;min-width:0}
+.pxlist .px-n{font-weight:600;font-size:15px;display:block}
+.pxlist .px-s{font-size:13px;color:var(--mut);display:block}
+.pxlist .px-v{text-align:right;font-weight:700;font-size:15px}
+.pxlist .px-c{display:block;font-size:13px;font-weight:600}
+.pxlist .ci{flex:none}
 /* Mining sahifasi */
 .card .sect{align-items:center;margin:0 0 12px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;align-items:end}
@@ -3754,10 +3767,12 @@ function showMain() {
     </section>
     <div class="tipcard"><a class="rowlink" href="#/security"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span><b>Birinchi marta pul bilan sinash</b><small>Kichik summa bilan xavfsiz boshlash tartibi</small></span><svg viewBox="0 0 24 24" class="ch" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a></div>
     <div class="tipcard" id="qk-tip" hidden><a class="rowlink" href="#/security"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="8" cy="14" r="4"/><path d="M11 12l8-8M16 7l3 3"/></svg></span><span><b>Parol yoki Face ID o'rnating</b><small>Har safar so'zlarni yozmasdan, tez va xavfsiz kirish</small></span><svg viewBox="0 0 24 24" class="ch" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a><div class="btns" style="padding:0 14px 12px"><button type="button" class="sec sm" id="qk-hide">Keyinroq</button></div></div>
+    <div class="tipcard"><a class="rowlink" href="#/prices"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 17l5-5 4 4 7-8"/><path d="M15 8h5v5"/></svg></span><span><b>Narxlar</b><small>Barcha kriptolarning hozirgi narxi</small></span><svg viewBox="0 0 24 24" class="ch" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a></div>
     <div class="tipcard"><a class="rowlink" href="#/mining"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16.1 7.4L5 18.5"/><path d="M8.2 3.8Q18.6 5 19.8 15.2"/></svg></span><span><b>Mining</b><small>Bitcoin tarmog'i va foyda kalkulyatori</small></span><svg viewBox="0 0 24 24" class="ch" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a></div>
   </section>
   <section class="page" id="pg-assets" hidden>
     <div class="ph-row"><h1 class="ph" tabindex="-1">Aktivlar</h1><a class="pill" href="#/add" id="as-add">Aktiv qo'shish</a></div>
+    <p style="margin:-8px 0 4px"><a href="#/prices" id="as-px">Barcha narxlarni ko'rish</a></p>
     <div class="chips" id="net-chips" role="group" aria-label="Tarmoq bo'yicha filtr"></div>
   <section class="card assets">
     <p class="msg" id="ng-msg" role="status" aria-live="polite"></p>
@@ -3867,7 +3882,7 @@ function showMain() {
     <h2 class="pgh st">Ko'rinish</h2>
     <section class="card"><h2 id="theme-h">Mavzu</h2><div class="seg" id="theme-seg" role="group" aria-labelledby="theme-h"></div></section>
     <button type="button" id="set-lock" class="sec w100">Hamyonni qulflash</button>
-    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 31</p>
+    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 32</p>
   </section>
   <section class="page" id="pg-backup" hidden>
     <h1 class="ph" tabindex="-1">Zaxira nusxa</h1>
@@ -3922,8 +3937,15 @@ function showMain() {
         <li>Yangi manzilga yuborishda oxirgi 6 belgini yozish talab qilinadi. Saqlangan manzillarga o'xshash manzil chiqsa, ogohlantiriladi.</li>
       </ul>
     </details>
-    <p class="mut">Versiya 31. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
+    <p class="mut">Versiya 32. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
   </section>
+  </section>
+  <section class="page" id="pg-prices" hidden>
+    <h1 class="ph" tabindex="-1">Narxlar</h1>
+    <p class="mut" id="px-st" role="status" aria-live="polite" style="margin:-4px 0 12px"></p>
+    <div class="pxbar"><label for="px-q" class="sr">Qidirish</label><input id="px-q" type="search" placeholder="Qidirish: BTC, Ethereum..." autocomplete="off"><button type="button" class="sec sm" id="px-refresh">Yangilash</button></div>
+    <ul class="pxlist" id="px-list" aria-busy="true"></ul>
+    <p class="mut" style="margin-top:12px">Narxlar CoinGecko'dan olinadi, AQSh dollarida. Ular taxminiy va bir necha daqiqa kechikishi mumkin.</p>
   </section>
   <section class="page" id="pg-mining" hidden>
     <h1 class="ph" tabindex="-1">Mining</h1>
@@ -3979,10 +4001,10 @@ function showMain() {
 
   $('#hide').onclick = () => { hidden = !hidden; const hb = $('#hide'); hb.setAttribute('aria-pressed', String(hidden)); hb.setAttribute('aria-label', hidden ? 'Balansni ko\'rsatish' : 'Balansni yashirish'); hb.title = hb.getAttribute('aria-label'); updateView(); };
   /* ---------- Router: har bir bo'lim alohida sahifa (#/yo'l) ---------- */
-  const PAGES = { home: 'pg-home', assets: 'pg-assets', receive: 'pick', send: 'pick', asset: 'recv', add: 'pg-add', wallets: 'pg-wallets', settings: 'pg-settings', backup: 'pg-backup', security: 'pg-security', mining: 'pg-mining', contacts: 'pg-contacts' };
-  const NAVOF = { home: 'nav-wallet', receive: 'nav-wallet', send: 'nav-wallet', assets: 'nav-assets', asset: 'nav-assets', add: 'nav-add', wallets: 'nav-add', settings: 'nav-set', backup: 'nav-set', security: 'nav-set', mining: 'nav-wallet', contacts: 'nav-set' };
-  const TITLES = { receive: 'To\'ldirish', send: 'Jo\'natish', asset: 'Aktiv', wallets: 'Boshqa hamyon', backup: 'Zaxira nusxa', security: 'Xavfsizlik', mining: 'Mining', contacts: 'Kontaktlar' };
-  const PARENT = { receive: 'home', send: 'home', asset: 'assets', wallets: 'add', backup: 'settings', security: 'settings', mining: 'home', contacts: 'settings' };
+  const PAGES = { home: 'pg-home', assets: 'pg-assets', receive: 'pick', send: 'pick', asset: 'recv', add: 'pg-add', wallets: 'pg-wallets', settings: 'pg-settings', backup: 'pg-backup', security: 'pg-security', mining: 'pg-mining', contacts: 'pg-contacts', prices: 'pg-prices' };
+  const NAVOF = { home: 'nav-wallet', receive: 'nav-wallet', send: 'nav-wallet', assets: 'nav-assets', asset: 'nav-assets', add: 'nav-add', wallets: 'nav-add', settings: 'nav-set', backup: 'nav-set', security: 'nav-set', mining: 'nav-wallet', prices: 'nav-wallet', contacts: 'nav-set' };
+  const TITLES = { receive: 'To\'ldirish', send: 'Jo\'natish', asset: 'Aktiv', wallets: 'Boshqa hamyon', backup: 'Zaxira nusxa', security: 'Xavfsizlik', mining: 'Mining', prices: 'Narxlar', contacts: 'Kontaktlar' };
+  const PARENT = { receive: 'home', send: 'home', asset: 'assets', wallets: 'add', backup: 'settings', security: 'settings', mining: 'home', prices: 'home', contacts: 'settings' };
   const NAVIDS = ['nav-wallet', 'nav-assets', 'nav-add', 'nav-set'];
   let cur = null, navs = 0;
   const parseRoute = p => { const m = String(p || '').replace(/^#?\/?/, '').split('/'); return { name: Object.prototype.hasOwnProperty.call(PAGES, m[0]) ? m[0] : 'home', id: /^[\w-]{1,64}$/.test(m[1] || '') ? m[1] : '', tab: m[2] || '' }; };
@@ -4018,6 +4040,7 @@ function showMain() {
     if (r.name === 'send' || r.name === 'receive') openPick(r.name);
     else { const h1 = el && el.querySelector('h1'); if (h1) { try { h1.focus({ preventScroll: true }); } catch (e) {} } }
     if (r.name === 'mining') loadMining();
+    if (r.name === 'prices') openPrices();
     paintQuick();
     if (r.name === 'contacts') paintContacts();
     try { window.scrollTo(0, 0); } catch (e) {}
@@ -4400,6 +4423,58 @@ async function loadMining(force) {
     MN = net;
   }
   mnBusy = false; paintMining();
+}
+
+/* ---------- Narxlar sahifasi: barcha kriptolarning hozirgi narxi (faqat ommaviy ma'lumot, CoinGecko) ---------- */
+let PX = null, pxBusy = false, pxAt = null, pxErr = false;
+const pxCoins = () => {
+  const seen = new Set(), out = [];
+  const add = (cg, sym, name) => { if (!cg || seen.has(cg)) return; seen.add(cg); out.push({ cg, sym, name }); };
+  for (const k of ['BTC', 'ETH', 'TON', 'SOL', 'TRX']) if (COINS[k]) add(COINS[k].cg, COINS[k].sym, String(COINS[k].name).split(' (')[0]);
+  for (const c of Object.values(COINS)) add(c.cg, c.sym, String(c.name).split(' (')[0]);
+  return out;
+};
+const fmtPx = n => n >= 1 ? '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  : '$' + n.toLocaleString('en-US', { minimumSignificantDigits: 2, maximumSignificantDigits: 4, maximumFractionDigits: 10 });
+async function loadPx() {
+  if (pxBusy) return; pxBusy = true; pxErr = false; paintPx();
+  try {
+    const ids = pxCoins().map(c => c.cg), res = {};
+    for (let i = 0; i < ids.length; i += 40) {
+      const j = await jfetch('https://api.coingecko.com/api/v3/simple/price?ids=' + ids.slice(i, i + 40).map(encodeURIComponent).join(',') + '&vs_currencies=usd&include_24hr_change=true');
+      for (const id of ids.slice(i, i + 40)) if (j[id] && Number.isFinite(j[id].usd)) res[id] = { usd: j[id].usd, ch: Number.isFinite(j[id].usd_24h_change) ? j[id].usd_24h_change : undefined };
+    }
+    if (!Object.keys(res).length) throw new Error('bo\'sh javob');
+    PX = res; pxAt = new Date();
+    for (const id in res) prices[id] = res[id];
+  } catch (e) { pxErr = true; }
+  pxBusy = false; paintPx();
+}
+function paintPx() {
+  const ul = $('#px-list'); if (!ul) return;
+  ul.setAttribute('aria-busy', String(pxBusy));
+  $('#px-refresh').disabled = pxBusy;
+  const q = ($('#px-q').value || '').trim().toLowerCase();
+  const st = $('#px-st');
+  st.textContent = pxBusy ? 'Yangilanmoqda...' : pxErr ? 'Narxlarni olib bo\'lmadi. Internetni tekshirib, "Yangilash" tugmasini bosing.' + (pxAt ? ' Oxirgi marta: ' + pxAt.toLocaleTimeString() : '') : pxAt ? 'Yangilandi: ' + pxAt.toLocaleTimeString() : '';
+  const have = PX || {};
+  const rows = pxCoins().filter(c => !q || c.sym.toLowerCase().includes(q) || c.name.toLowerCase().includes(q));
+  if (!PX && pxBusy) { ul.innerHTML = '<li><span class="mut">Yuklanmoqda...</span></li>'; return; }
+  if (!PX && pxErr) { ul.innerHTML = '<li><span class="mut">Ma\'lumot olinmadi.</span></li>'; return; }
+  if (!rows.length) { ul.innerHTML = '<li><span class="mut">Hech narsa topilmadi.</span></li>'; return; }
+  ul.innerHTML = rows.map(c => {
+    const p = have[c.cg], ch = p && p.ch;
+    const chTxt = Number.isFinite(ch) ? (ch >= 0 ? '▲ +' : '▼ −') + Math.abs(ch).toFixed(2) + '%' : '';
+    return '<li><span class="ci" aria-hidden="true" style="--c:' + (CCOL[c.sym] || 'var(--coin-other)') + '">' + (GLYPH[c.sym] || esc(c.sym.slice(0, 1))) + '</span>'
+      + '<span class="px-t"><span class="px-n">' + esc(c.name) + '</span><span class="px-s">' + esc(c.sym) + '</span></span>'
+      + '<span class="px-v">' + (p ? esc(fmtPx(p.usd)) : '—') + (chTxt ? '<span class="px-c ' + (ch >= 0 ? 'up' : 'down') + '">' + chTxt + '</span>' : '') + '</span></li>';
+  }).join('');
+}
+function openPrices() {
+  $('#px-refresh').onclick = () => loadPx();
+  $('#px-q').oninput = paintPx;
+  paintPx();
+  if (!PX || !pxAt || Date.now() - pxAt.getTime() > 60000) loadPx();
 }
 
 function paintMining() {

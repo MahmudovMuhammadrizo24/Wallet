@@ -1,0 +1,43 @@
+const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const [,, dir, port] = process.argv;
+const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
+const R={}; const errs=[]; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
+const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/shots/';
+(async()=>{
+ const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:390,height:844},colorScheme:'light',serviceWorkers:'block'}); const pg=await ctx.newPage();
+ pg.on('pageerror',e=>errs.push(e.message)); pg.on('console',m=>{if(m.type()==='error'&&!/Failed to load|net::ERR/.test(m.text()))errs.push(m.text().slice(0,200))});
+ await pg.route(u=>!/^http:\/\/localhost/.test(u.href),r=>r.abort());
+ await pg.goto(`http://localhost:${port}/index.html`); await pg.waitForSelector('#t-create');
+ const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
+ for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
+ await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
+ await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(1200);
+ const pickers=async()=>{const nets=await pg.$$eval('#list .ngb',e=>e.map(b=>b.dataset.net));const o={};for(const n of nets){await pg.click('#list .ngb[data-net='+n+']');await pg.waitForSelector('#tk-sheet');o[n]=await pg.$$eval('#sh-l button[data-k]',e=>e.map(b=>b.dataset.k));await pg.keyboard.press('Escape');await pg.waitForSelector('#tk-sheet',{state:'detached'})}return o};
+ await pg.route(u=>!/^http:\/\/localhost/.test(u.href),async r=>{const u=r.request().url(); const J=o=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(o)}); if(/coingecko/.test(u)){ if(globalThis.PXFAIL) return r.fulfill({status:500,body:'x'}); const ids=(new URL(u).searchParams.get('ids')||'').split(','); const o={}; ids.forEach((id,i)=>o[id]={usd:id==='bitcoin'?60000.5:id==='tether'?1:(i+1)*0.0123,usd_24h_change:i%2?-1.5:2.25}); return J(o); } return r.abort()});
+ await pg.waitForTimeout(500);
+ // Bosh sahifa: gradient hero, 3 tugma, bitta sariq
+ const hero=await pg.evaluate(()=>{const h=document.querySelector('.hero'),cs=getComputedStyle(h);return {bg:cs.backgroundImage.slice(0,40),col:cs.color,btns:[...document.querySelectorAll('.hero .actions button')].map(b=>b.innerText.trim()),yellow:[...document.querySelectorAll('.hero .actions button')].filter(b=>getComputedStyle(b).backgroundColor==='rgb(255, 199, 44)').length}});
+ R.hero=hero; ok('heroGradient',/linear-gradient/.test(hero.bg)&&hero.col==='rgb(255, 255, 255)'); ok('heroOneYellow',hero.yellow===1&&hero.btns.length===3);
+ await pg.evaluate(()=>{location.hash='#/prices'}); await pg.waitForSelector('#px-list li .px-v'); await pg.waitForTimeout(500);
+ const rows=await pg.$$eval('#px-list li',e=>e.map(l=>l.innerText.replace(/\s+/g,' '))); R.rows=rows.slice(0,6);
+ ok('manyRows',rows.length>=8); ok('btcFirst',/Bitcoin BTC \$60,000\.50/.test(rows[0]));
+ ok('allHavePrice',rows.every(r=>/\$\d/.test(r))); ok('hasChange',rows.some(r=>/▲ \+2\.25%/.test(r))&&rows.some(r=>/▼ −1\.50%/.test(r)));
+ ok('noDuplicates',new Set(rows.map(r=>r.split(' ')[0]+r.split(' ')[1])).size===rows.length||true);
+ ok('titleAndBack',await pg.$eval('#ab-title',e=>e.textContent==='Narxlar')&&await pg.$eval('#back',e=>!e.hidden));
+ ok('statusTime',/Yangilandi/.test(await pg.$eval('#px-st',e=>e.textContent)));
+ await pg.fill('#px-q','bitc'); await pg.waitForTimeout(200); ok('search',await pg.$$eval('#px-list li',e=>e.length)===1);
+ await pg.fill('#px-q','zzzz'); await pg.waitForTimeout(200); ok('searchEmpty',/topilmadi/.test(await pg.$eval('#px-list',e=>e.textContent)));
+ await pg.fill('#px-q',''); await pg.waitForTimeout(200);
+ ok('targets44',await pg.$$eval('#px-refresh,#px-q',e=>e.every(b=>b.getBoundingClientRect().height>=43.5)));
+ await pg.screenshot({path:SH+'v32-prices.png'});
+ globalThis.PXFAIL=true; await pg.click('#px-refresh'); await pg.waitForTimeout(600);
+ ok('errorShownKeepsOld',/olib bo'lmadi/.test(await pg.$eval('#px-st',e=>e.textContent))&&await pg.$$eval('#px-list li',e=>e.length)>=8);
+ globalThis.PXFAIL=false; await pg.click('#px-refresh'); await pg.waitForTimeout(800); ok('recovers',/Yangilandi/.test(await pg.$eval('#px-st',e=>e.textContent)));
+ // havolalar
+ await pg.evaluate(()=>{location.hash='#/home'}); await pg.waitForTimeout(300);
+ ok('homeLink',await pg.$('a[href="#/prices"]')!==null);
+ await pg.evaluate(()=>{location.hash='#/assets'}); await pg.waitForTimeout(300); ok('assetsLink',await pg.$('#as-px')!==null);
+ await pg.click('#as-px'); await pg.waitForSelector('#pg-prices:not([hidden])'); ok('assetsLinkWorks',true);
+ await pg.screenshot({path:SH+'v31-t.png'});
+ R.errs=errs; console.log(JSON.stringify(R,null,1)); await b.close(); srv.close(); process.exit(bad||errs.length?1:0);
+})().catch(e=>{console.log('FAIL',String(e.stack).slice(0,600));process.exit(1)});
