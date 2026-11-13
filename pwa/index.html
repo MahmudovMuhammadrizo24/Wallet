@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-Q4X2dh5rQhi4TphRtjUw157uyojm4ZMVCboJb2q4OM4='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-rfA239o3vpLKLZFQnzHP/3L/ydu9dv1mK7MvS8L34y0='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="theme-color" content="#08111f">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -355,6 +355,14 @@ button.sm{min-height:44px;min-width:44px}
 .addrow.nob .st{color:var(--mut)}
 #tk-add{width:100%;min-height:54px;border-radius:27px;font-size:16px;font-weight:700;margin-top:12px}
 .addtk .lnk{background:transparent;color:var(--sky);min-height:44px;font-weight:700;width:100%;margin-top:4px}
+/* Kirish ekrani (dizayn: Boshlash) */
+.logo{border-radius:0}
+.authhero{margin:-16px -16px 8px;padding:32px 20px 24px;border-radius:var(--r) var(--r) 28px 28px;background:linear-gradient(160deg,#0b63b8,#0a3f7a);color:#fff;text-align:center}
+.authhero .logo{width:84px;height:84px;margin:0 auto 14px}
+.authhero .logo>rect:first-of-type{fill:#fff;fill-opacity:.16}
+.authhero h1{color:#fff;font-size:26px;font-weight:800;margin:0 0 6px}
+.authhero .tagline,.center .authhero .tagline{color:rgba(255,255,255,.92);font-size:15px;margin:0}
+#pg-security .card h3{display:flex;align-items:center;gap:8px}
 /* Narxlar sahifasi */
 #as-px{display:inline-flex;align-items:center;min-height:44px;min-width:44px;font-weight:600}
 .pxbar{display:flex;gap:8px;align-items:center;margin:0 0 12px}
@@ -2645,7 +2653,7 @@ function applyTheme(t) {
 applyTheme(getTheme());
 LIGHT_MQ.addEventListener('change', () => { if (getTheme() === 'system') applyTheme('system'); });
 
-const LOGO = '<svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="9" fill="#5ccbff"/><g fill="#08111f"><rect x="9" y="9" width="14" height="14" rx="1.5"/><rect x="9" y="9" width="14" height="14" rx="1.5" transform="rotate(45 16 16)"/></g><circle cx="16" cy="16" r="3.2" fill="#ffc72c"/></svg>';
+const LOGO = '<svg class="logo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><rect x="4" y="4" width="112" height="112" rx="28" fill="#0b63b8"/><path d="M30 44 L74 28 a7 7 0 0 1 9.5 6.5 V44" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="26" y="42" width="68" height="46" rx="12" fill="#fff"/><circle cx="78" cy="65" r="9" fill="#ffc72c"/><circle cx="78" cy="65" r="3" fill="#0a3f7a"/></svg>';
 
 /* ---------- Tangalar ---------- */
 const COINS = {
@@ -3586,8 +3594,7 @@ function showAuth(tab) {
   const has = !!(store.get('cw_vault') && store.get('cw_salt'));
   app.innerHTML = `
   <div class="center card">
-    <div class="brand">${LOGO}<h1>Mening hamyonim</h1></div>
-    <p class="tagline">Faqat shu qurilmada saqlanadigan, shifrlangan hamyon.</p>
+    <div class="authhero">${LOGO}<h1>Mening hamyonim</h1><p class="tagline">Faqat shu qurilmada saqlanadigan, shifrlangan hamyon.</p></div>
     <div class="tabs" role="tablist" aria-label="Hamyon amallari">
       <button type="button" role="tab" aria-selected="${authTab === 'create'}" class="tab ${authTab === 'create' ? 'on' : ''}" id="t-create">Hamyon yaratish</button>
       <button type="button" role="tab" aria-selected="${authTab === 'import'}" class="tab ${authTab === 'import' ? 'on' : ''}" id="t-import">Hamyon kiritish</button>
@@ -3882,7 +3889,7 @@ function showMain() {
     <h2 class="pgh st">Ko'rinish</h2>
     <section class="card"><h2 id="theme-h">Mavzu</h2><div class="seg" id="theme-seg" role="group" aria-labelledby="theme-h"></div></section>
     <button type="button" id="set-lock" class="sec w100">Hamyonni qulflash</button>
-    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 32</p>
+    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 33</p>
   </section>
   <section class="page" id="pg-backup" hidden>
     <h1 class="ph" tabindex="-1">Zaxira nusxa</h1>
@@ -3893,23 +3900,25 @@ function showMain() {
   </section>
   </section>
   <section class="page" id="pg-security" hidden>
-    <h1 class="ph" tabindex="-1">Xavfsizlik va jonli sinov</h1>
+    <h1 class="ph" tabindex="-1">Xavfsizlik</h1>
   <section class="card" id="pin-card" aria-labelledby="pin-h">
     <h2 id="pin-h">Tez kirish: PIN, parol, Face ID</h2>
     <p class="mut" id="pin-state"></p>
     <div class="btns"><button type="button" id="pin-set"></button><button type="button" class="sec" id="pw-set"></button><button type="button" class="sec" id="pin-off" hidden>PINni o'chirish</button></div>
     <div class="msg" id="pin-note" role="status" aria-live="polite"></div>
-    <hr class="sep">
+  </section>
+  <section class="card" id="lim-card" aria-labelledby="lim-h">
     <h3 style="margin:0 0 4px;font-size:16px" id="lim-h">Kunlik yuborish limiti</h3>
     <p class="mut" id="lim-state"></p>
     <div class="btns"><button type="button" class="sec" id="lim-set">Limitni o'zgartirish</button></div>
     <div class="msg" id="lim-note" role="status" aria-live="polite"></div>
-    <hr class="sep">
+  </section>
+  <section class="card" id="bio-card">
     <p class="mut" id="bio-state"></p>
     <div class="btns"><button type="button" id="bio-set">Face ID ni yoqish</button><button type="button" class="sec" id="bio-off" hidden>Face ID ni o'chirish</button></div>
     <div class="msg" id="bio-note" role="status" aria-live="polite"></div>
     <p class="mut">PIN yoki parol yoqilsa, maxfiy so'zlar shu qurilmada shifrlangan holda saqlanadi (PIN uchun 5 ta, parol uchun 10 ta xato urinishdan keyin o'chadi). Face ID/barmoq izi qurilmaning o'z himoyasidan kalit oladi va faqat PRF qo'llab-quvvatlanganda yoqiladi. Bir vaqtda faqat bittasi: PIN yoki parol. Face ID ularga qo'shimcha ishlaydi. Yuborish paytida so'zlar baribir so'raladi.</p>
-    <div class="warn"><b>Eslatma:</b> telefoningiz xotirasining nusxasi o'g'irlansa, 4-6 xonali PIN oflayn buzilishi mumkin (urinishlar cheklovi faqat ilova ichida ishlaydi). Katta summa uchun uzun parol (10+ belgi) tanlang; PIN faqat qulaylik uchun.</div>
+    <div class="warn"><b>Eslatma:</b> telefoningiz xotirasining nusxasi o'g'irlansa, PIN (8-12 raqam, Argon2id bilan kuchaytirilgan) ilova cheklovlarisiz, oflayn urinib ko'rilishi mumkin. Katta summa uchun uzun parol (10+ belgi) tanlang; PIN faqat qulaylik uchun.</div>
   </section>
   <section class="card" id="about">
     <details>
@@ -3937,7 +3946,7 @@ function showMain() {
         <li>Yangi manzilga yuborishda oxirgi 6 belgini yozish talab qilinadi. Saqlangan manzillarga o'xshash manzil chiqsa, ogohlantiriladi.</li>
       </ul>
     </details>
-    <p class="mut">Versiya 32. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
+    <p class="mut">Versiya 33. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
   </section>
   </section>
   <section class="page" id="pg-prices" hidden>
@@ -4003,7 +4012,7 @@ function showMain() {
   /* ---------- Router: har bir bo'lim alohida sahifa (#/yo'l) ---------- */
   const PAGES = { home: 'pg-home', assets: 'pg-assets', receive: 'pick', send: 'pick', asset: 'recv', add: 'pg-add', wallets: 'pg-wallets', settings: 'pg-settings', backup: 'pg-backup', security: 'pg-security', mining: 'pg-mining', contacts: 'pg-contacts', prices: 'pg-prices' };
   const NAVOF = { home: 'nav-wallet', receive: 'nav-wallet', send: 'nav-wallet', assets: 'nav-assets', asset: 'nav-assets', add: 'nav-add', wallets: 'nav-add', settings: 'nav-set', backup: 'nav-set', security: 'nav-set', mining: 'nav-wallet', prices: 'nav-wallet', contacts: 'nav-set' };
-  const TITLES = { receive: 'To\'ldirish', send: 'Jo\'natish', asset: 'Aktiv', wallets: 'Boshqa hamyon', backup: 'Zaxira nusxa', security: 'Xavfsizlik', mining: 'Mining', prices: 'Narxlar', contacts: 'Kontaktlar' };
+  const TITLES = { receive: 'Qabul qilish', send: 'Yuborish', asset: 'Aktiv', wallets: 'Boshqa hamyon', backup: 'Zaxira nusxa', security: 'Xavfsizlik', mining: 'Mining', prices: 'Narxlar', contacts: 'Kontaktlar' };
   const PARENT = { receive: 'home', send: 'home', asset: 'assets', wallets: 'add', backup: 'settings', security: 'settings', mining: 'home', prices: 'home', contacts: 'settings' };
   const NAVIDS = ['nav-wallet', 'nav-assets', 'nav-add', 'nav-set'];
   let cur = null, navs = 0;
