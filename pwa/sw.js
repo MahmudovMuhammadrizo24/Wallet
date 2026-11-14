@@ -1,6 +1,6 @@
 'use strict';
 // Keshlanadigan narsa: faqat ilova qobig'i. Narx va balans so'rovlariga tegilmaydi.
-const CACHE = 'hamyon-v34';
+const CACHE = 'hamyon-v35';
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "apple-touch-icon.png"];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
