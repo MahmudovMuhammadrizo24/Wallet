@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-8eC3YFwgzmDfgpGR2vUU9L2TATx3E2Yb+Zwu2MLWYyo='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-epQsssCsmrJgAeZCvmYBAgHndubfpPCJnZUSbbfZHA4='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="theme-color" content="#08111f">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -428,6 +428,25 @@ button.sm{min-height:44px;min-width:44px}
   .sheet-bg{align-items:center}
   .sheet{border-radius:24px;max-width:520px;margin:0 16px}
 }
+/* v36: animatsiyalar (transform/opacity; prefers-reduced-motion da o'chadi) */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+@keyframes rowIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes flashUp{from{background:rgba(10,140,70,.22)}to{background:transparent}}
+@keyframes flashDown{from{background:rgba(200,40,40,.2)}to{background:transparent}}
+.modal-bg,.sheet-bg{animation:fadeIn .16s ease both}
+.modal{animation:popIn .2s ease both}
+.toast{animation:toastIn .24s ease both}
+input[aria-invalid=true]{animation:shake .38s ease}
+.nav button{transition:background-color .2s,color .2s}
+.nav button svg{transition:stroke .2s}
+.pxlist.stg li{animation:rowIn .3s ease both;animation-delay:calc(var(--i,0) * 28ms)}
+.pxlist li.fl-up{animation:flashUp 1.1s ease-out}
+.pxlist li.fl-down{animation:flashDown 1.1s ease-out}
+#refresh.spin svg{animation:spin .9s linear infinite}
+.total{font-variant-numeric:tabular-nums}
 /* Narxlar sahifasi */
 #as-px{display:inline-flex;align-items:center;min-height:44px;min-width:44px;font-weight:600}
 .pxbar{display:flex;gap:8px;align-items:center;margin:0 0 12px}
@@ -3960,7 +3979,7 @@ function showMain() {
     <h2 class="pgh st">Ko'rinish</h2>
     <section class="card"><h2 id="theme-h">Mavzu</h2><div class="seg" id="theme-seg" role="group" aria-labelledby="theme-h"></div></section>
     <button type="button" id="set-lock" class="sec w100">Hamyonni qulflash</button>
-    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 35</p>
+    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 36</p>
   </section>
   <section class="page" id="pg-backup" hidden>
     <h1 class="ph" tabindex="-1">Zaxira nusxa</h1>
@@ -4017,7 +4036,7 @@ function showMain() {
         <li>Yangi manzilga yuborishda oxirgi 6 belgini yozish talab qilinadi. Saqlangan manzillarga o'xshash manzil chiqsa, ogohlantiriladi.</li>
       </ul>
     </details>
-    <p class="mut">Versiya 35. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
+    <p class="mut">Versiya 36. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
   </section>
   </section>
   <section class="page" id="pg-prices" hidden>
@@ -4405,7 +4424,7 @@ function updateView() {
     }).join('');
     $('#home-empty').hidden = data.items.length > 0;
   }
-  $('#total').textContent = mask(fmtUsd(total));
+  animTotal($('#total'), total);
   { const hc = $('#hchg'); if (hc) { const d = total - prevT; hc.textContent = (hidden || !(total > 0)) ? '' : (d >= 0 ? '▲ +' : '▼ −') + fmtUsd(Math.abs(d)) + ' (' + (prevT > 0 ? Math.abs(d / prevT * 100).toFixed(2) : '0.00') + '%) · 24 soat'; } }
   $('#status').textContent = failed ? 'Ba\'zi balanslar olinmadi. Yuqoridagi yangilash tugmasini bosing.' : lastUpdate ? 'Yangilandi: ' + lastUpdate.toLocaleTimeString() : '';
   const entries = Object.entries(groups).sort((a, b) => b[1] - a[1]);
@@ -4424,6 +4443,7 @@ let refreshing = false;
 async function refresh() {
   if (!data || refreshing) return;
   refreshing = true;
+  { const rb = $('#refresh'); if (rb) rb.classList.add('spin'); }
   const st = $('#status'); if (st) st.textContent = 'Yangilanmoqda...';
   const addrs = data.items.filter(i => i.kind === 'addr');
   addrs.forEach(i => { if (balances[i.id] === undefined) balances[i.id] = undefined; });
@@ -4434,7 +4454,7 @@ async function refresh() {
       catch (e) { balances[it.id] = null; }
     })
   ]);
-  lastUpdate = new Date(); refreshing = false; updateView();
+  lastUpdate = new Date(); refreshing = false; { const rb = $('#refresh'); if (rb) rb.classList.remove('spin'); } updateView();
 }
 
 /* ---------- Mining: Bitcoin tarmog'i statistikasi va foyda kalkulyatori ----------
@@ -4540,6 +4560,23 @@ async function loadPx() {
   } catch (e) { pxErr = true; }
   pxBusy = false; paintPx();
 }
+let totShown = 0, totRaf = 0;
+function animTotal(el, to) {
+  if (!el) return;
+  cancelAnimationFrame(totRaf);
+  const from = totShown; totShown = to;
+  let calm = false; try { calm = window.matchMedia('(prefers-reduced-motion:reduce)').matches; } catch (e) {}
+  const put = v => { el.textContent = mask(fmtUsd(v)); };
+  if (calm || hidden || !(Math.abs(to - from) > 0.005) || !(typeof requestAnimationFrame === 'function')) { put(to); return; }
+  const t0 = performance.now(), D = 650;
+  const step = now => {
+    const k = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3);
+    if (k >= 1) { put(to); return; }
+    put(from + (to - from) * e); totRaf = requestAnimationFrame(step);
+  };
+  totRaf = requestAnimationFrame(step);
+}
+const pxSeen = {};
 function paintPx() {
   const ul = $('#px-list'); if (!ul) return;
   ul.setAttribute('aria-busy', String(pxBusy));
@@ -4552,13 +4589,17 @@ function paintPx() {
   if (!PX && pxBusy) { ul.innerHTML = '<li class="sk"><span class="ci" aria-hidden="true"></span><span class="px-t"><span class="skl" style="width:45%"></span><span class="skl" style="width:22%;margin-top:7px"></span></span><span class="skl" style="width:60px"></span></li>'.repeat(8); return; }
   if (!PX && pxErr) { ul.innerHTML = '<li class="full"><span class="mut">Ma\'lumot olinmadi. Internetni tekshiring.</span><button type="button" class="sm" id="px-retry">Qayta urinish</button></li>'; const rb = $('#px-retry'); if (rb) rb.onclick = () => loadPx(); return; }
   if (!rows.length) { ul.innerHTML = '<li class="full"><span class="mut">Hech narsa topilmadi.</span></li>'; return; }
-  ul.innerHTML = rows.map(c => {
+  const stg = !ul.children.length || !!ul.querySelector('li.sk');
+  ul.innerHTML = rows.map((c, i) => {
     const p = have[c.cg], ch = p && p.ch;
+    const pv = pxSeen[c.cg], fl = (pv !== undefined && p && pv !== p.usd) ? (p.usd > pv ? ' class="fl-up"' : ' class="fl-down"') : '';
     const chTxt = Number.isFinite(ch) ? (ch >= 0 ? '▲ +' : '▼ −') + Math.abs(ch).toFixed(2) + '%' : '';
-    return '<li><span class="ci" aria-hidden="true" style="--c:' + (CCOL[c.sym] || 'var(--coin-other)') + '">' + (GLYPH[c.sym] || esc(c.sym.slice(0, 1))) + '</span>'
+    return '<li' + fl + ' style="--i:' + Math.min(i, 12) + '"><span class="ci" aria-hidden="true" style="--c:' + (CCOL[c.sym] || 'var(--coin-other)') + '">' + (GLYPH[c.sym] || esc(c.sym.slice(0, 1))) + '</span>'
       + '<span class="px-t"><span class="px-n">' + esc(c.name) + '</span><span class="px-s">' + esc(c.sym) + '</span></span>'
       + '<span class="px-v">' + (p ? esc(fmtPx(p.usd)) : '—') + (chTxt ? '<span class="px-c ' + (ch >= 0 ? 'up' : 'down') + '">' + chTxt + '</span>' : '') + '</span></li>';
   }).join('');
+  for (const c of rows) { const p = have[c.cg]; if (p) pxSeen[c.cg] = p.usd; }
+  if (stg) { ul.classList.add('stg'); setTimeout(() => ul.classList.remove('stg'), 900); }
 }
 function openPrices() {
   $('#px-refresh').onclick = () => loadPx();
