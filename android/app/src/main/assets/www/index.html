@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-rfA239o3vpLKLZFQnzHP/3L/ydu9dv1mK7MvS8L34y0='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'wasm-unsafe-eval' 'sha256-5lncf1orYiSbyj69fbYqmyGjibd6rWXUKi/tSo8Yv+g=' 'sha256-hBF6L6x+8IbkATqA6iz2uAp7V7BF57FGunz/FhIjqp0='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://blockstream.info https://mempool.space https://ethereum-rpc.publicnode.com https://eth.llamarpc.com https://cloudflare-eth.com https://eth.blockscout.com https://api.mainnet-beta.solana.com https://solana-rpc.publicnode.com https://api.trongrid.io https://toncenter.com https://api.coingecko.com https://polygon-bor-rpc.publicnode.com https://polygon-rpc.com https://arbitrum-one-rpc.publicnode.com https://arb1.arbitrum.io https://optimism-rpc.publicnode.com https://mainnet.optimism.io https://avalanche-c-chain-rpc.publicnode.com https://api.avax.network https://bsc-rpc.publicnode.com https://bsc-dataseed.binance.org; base-uri 'none'; form-action 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="theme-color" content="#08111f">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -363,6 +363,36 @@ button.sm{min-height:44px;min-width:44px}
 .authhero h1{color:#fff;font-size:26px;font-weight:800;margin:0 0 6px}
 .authhero .tagline,.center .authhero .tagline{color:rgba(255,255,255,.92);font-size:15px;margin:0}
 #pg-security .card h3{display:flex;align-items:center;gap:8px}
+/* Veb (desktop) maketi: faqat keng ekranda */
+.nav .dk{display:none}
+.hm-l,.hm-r,.hm-t{display:contents}
+@media (min-width:1024px){
+  .wrap{max-width:none;margin:0;padding:20px 40px 48px;margin-left:calc(248px + max(0px,(100vw - 248px - 1160px) / 2));margin-right:max(0px,(100vw - 248px - 1160px) / 2);max-width:1160px}
+  .nav{top:0;right:auto;bottom:0;width:248px;border-top:0;border-right:1px solid var(--line);padding:20px 12px;background:var(--card);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .nav-in{max-width:none;height:100%;display:flex;flex-direction:column;gap:4px;align-content:start}
+  .nav .dk{display:flex}
+  .nav-brand{align-items:center;gap:10px;padding:4px 6px 18px;font-weight:800;font-size:16px;white-space:nowrap;color:var(--txt)}
+  .nav-brand .logo{width:36px;height:36px;flex:none}
+  .nav button{flex-direction:row;justify-content:flex-start;gap:12px;min-height:48px;padding:0 14px;font-size:15px;font-weight:600;border-radius:14px;width:100%}
+  .nav button svg{box-sizing:content-box;width:22px;height:22px;padding:0;border-radius:0}
+  .nav button:hover{background:var(--s2)}
+  .nav button[aria-current=page]{background:var(--s2);color:var(--sky);font-weight:700}
+  .nav-sp{flex:1;min-height:8px}
+  #brand{display:none}
+  .appbar{margin:0 -40px 12px;padding:10px 40px}
+  .toast{left:calc(50% + 124px);bottom:24px}
+  #pg-home:not([hidden]){display:grid;grid-template-columns:minmax(360px,5fr) minmax(0,7fr);gap:0 24px;align-items:start}
+  .hm-l{display:block;grid-column:1;grid-row:1}
+  .hm-t{display:block;grid-column:1;grid-row:2}
+  .hm-r{display:block;grid-column:2;grid-row:1 / span 2}
+  #pg-home .total{font-size:44px}
+  #pg-settings,#pg-backup,#pg-wallets,#pg-add,#pg-contacts,#pg-mining,#recv,#pick{max-width:760px}
+  #pg-security:not([hidden]){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 20px;align-items:start}
+  #pg-security>:not(.card){grid-column:1 / -1}
+  #px-list{display:grid;grid-template-columns:1fr 1fr}
+  #px-list li:nth-last-child(2):nth-child(odd){border-bottom:0}
+  .center{max-width:480px;margin-top:8vh}
+}
 /* Narxlar sahifasi */
 #as-px{display:inline-flex;align-items:center;min-height:44px;min-width:44px;font-weight:600}
 .pxbar{display:flex;gap:8px;align-items:center;margin:0 0 12px}
@@ -3754,6 +3784,7 @@ function showMain() {
   <div id="pages">
   <section class="page" id="pg-home" hidden>
     <h1 class="ph sr" tabindex="-1">Bosh sahifa</h1>
+  <div class="hm-l">
   <section class="card hero">
     <div class="mut">Umumiy balans</div>
     <div class="total" id="total">$0.00</div>
@@ -3767,15 +3798,20 @@ function showMain() {
       <button type="button" id="act-add"><span class="ai"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></span>Qo'shish</button>
     </div>
   </section>
+  </div>
+  <div class="hm-r">
     <div class="sect"><h2>Aktivlar</h2><a class="more" href="#/assets">Hammasi</a></div>
     <section class="card assets">
       <ul class="mini" id="home-list"></ul>
       <div class="empty" id="home-empty" hidden><strong>Hozircha aktiv yo'q</strong><p>Birinchi manzilingizni qo'shing yoki "Qabul qilish" orqali pul qabul qiling.</p><a class="btn" href="#/add">Aktiv qo'shish</a></div>
     </section>
+  </div>
+  <div class="hm-t">
     <div class="tipcard"><a class="rowlink" href="#/security"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><span><b>Birinchi marta pul bilan sinash</b><small>Kichik summa bilan xavfsiz boshlash tartibi</small></span><svg viewBox="0 0 24 24" class="ch" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a></div>
     <div class="tipcard" id="qk-tip" hidden><a class="rowlink" href="#/security"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="8" cy="14" r="4"/><path d="M11 12l8-8M16 7l3 3"/></svg></span><span><b>Parol yoki Face ID o'rnating</b><small>Har safar so'zlarni yozmasdan, tez va xavfsiz kirish</small></span><svg viewBox="0 0 24 24" class="ch" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a><div class="btns" style="padding:0 14px 12px"><button type="button" class="sec sm" id="qk-hide">Keyinroq</button></div></div>
     <div class="tipcard"><a class="rowlink" href="#/prices"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 17l5-5 4 4 7-8"/><path d="M15 8h5v5"/></svg></span><span><b>Narxlar</b><small>Barcha kriptolarning hozirgi narxi</small></span><svg viewBox="0 0 24 24" class="ch" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a></div>
     <div class="tipcard"><a class="rowlink" href="#/mining"><span class="ri"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16.1 7.4L5 18.5"/><path d="M8.2 3.8Q18.6 5 19.8 15.2"/></svg></span><span><b>Mining</b><small>Bitcoin tarmog'i va foyda kalkulyatori</small></span><svg viewBox="0 0 24 24" class="ch" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg></a></div>
+  </div>
   </section>
   <section class="page" id="pg-assets" hidden>
     <div class="ph-row"><h1 class="ph" tabindex="-1">Aktivlar</h1><a class="pill" href="#/add" id="as-add">Aktiv qo'shish</a></div>
@@ -3889,7 +3925,7 @@ function showMain() {
     <h2 class="pgh st">Ko'rinish</h2>
     <section class="card"><h2 id="theme-h">Mavzu</h2><div class="seg" id="theme-seg" role="group" aria-labelledby="theme-h"></div></section>
     <button type="button" id="set-lock" class="sec w100">Hamyonni qulflash</button>
-    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 33</p>
+    <p class="mut" style="text-align:center;margin-top:16px">Mening hamyonim · versiya 34</p>
   </section>
   <section class="page" id="pg-backup" hidden>
     <h1 class="ph" tabindex="-1">Zaxira nusxa</h1>
@@ -3946,7 +3982,7 @@ function showMain() {
         <li>Yangi manzilga yuborishda oxirgi 6 belgini yozish talab qilinadi. Saqlangan manzillarga o'xshash manzil chiqsa, ogohlantiriladi.</li>
       </ul>
     </details>
-    <p class="mut">Versiya 33. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
+    <p class="mut">Versiya 34. Ilova mustaqil xavfsizlik auditidan o'tmagan.</p>
   </section>
   </section>
   <section class="page" id="pg-prices" hidden>
@@ -3996,9 +4032,14 @@ function showMain() {
   </section>
   </div>
   <nav class="nav" aria-label="Bo'limlar"><div class="nav-in">
+    <div class="nav-brand dk" aria-hidden="true">${LOGO}<span>Mening hamyonim</span></div>
     <button type="button" id="nav-wallet"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3"/><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M16 13.5h2"/></svg><span>Hamyon</span></button>
     <button type="button" id="nav-assets"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg><span>Aktivlar</span></button>
     <button type="button" id="nav-add"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg><span>Qo'shish</span></button>
+    <button type="button" id="nav-px" class="dk"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 17l5-5 4 4 7-8"/><path d="M15 8h5v5"/></svg><span>Narxlar</span></button>
+    <button type="button" id="nav-mine" class="dk"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16.1 7.4L5 18.5"/><path d="M8.2 3.8Q18.6 5 19.8 15.2"/></svg><span>Mining</span></button>
+    <button type="button" id="nav-ct" class="dk"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-3A3.5 3.5 0 0 0 6 17.5V19"/><circle cx="11" cy="8" r="3"/><path d="M18 8v4M16 10h4"/></svg><span>Kontaktlar</span></button>
+    <div class="nav-sp dk" aria-hidden="true"></div>
     <button type="button" id="nav-set"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"/></svg><span>Sozlamalar</span></button>
   </div></nav>`;
 
@@ -4014,7 +4055,9 @@ function showMain() {
   const NAVOF = { home: 'nav-wallet', receive: 'nav-wallet', send: 'nav-wallet', assets: 'nav-assets', asset: 'nav-assets', add: 'nav-add', wallets: 'nav-add', settings: 'nav-set', backup: 'nav-set', security: 'nav-set', mining: 'nav-wallet', prices: 'nav-wallet', contacts: 'nav-set' };
   const TITLES = { receive: 'Qabul qilish', send: 'Yuborish', asset: 'Aktiv', wallets: 'Boshqa hamyon', backup: 'Zaxira nusxa', security: 'Xavfsizlik', mining: 'Mining', prices: 'Narxlar', contacts: 'Kontaktlar' };
   const PARENT = { receive: 'home', send: 'home', asset: 'assets', wallets: 'add', backup: 'settings', security: 'settings', mining: 'home', prices: 'home', contacts: 'settings' };
-  const NAVIDS = ['nav-wallet', 'nav-assets', 'nav-add', 'nav-set'];
+  const NAVIDS = ['nav-wallet', 'nav-assets', 'nav-add', 'nav-set', 'nav-px', 'nav-mine', 'nav-ct'];
+  const NAVDK = { mining: 'nav-mine', prices: 'nav-px', contacts: 'nav-ct' };
+  const isDesk = () => { try { return window.matchMedia('(min-width:1024px)').matches; } catch (e) { return false; } };
   let cur = null, navs = 0;
   const parseRoute = p => { const m = String(p || '').replace(/^#?\/?/, '').split('/'); return { name: Object.prototype.hasOwnProperty.call(PAGES, m[0]) ? m[0] : 'home', id: /^[\w-]{1,64}$/.test(m[1] || '') ? m[1] : '', tab: m[2] || '' }; };
   const leaveAsset = () => { stopWatch(); PANEL = null; const sp = $('#rp-send'); if (sp) sp.innerHTML = ''; };
@@ -4045,7 +4088,7 @@ function showMain() {
     $('#ab-title').textContent = ttl;
     const pageTitle = { home: 'Bosh sahifa', assets: 'Aktivlar', add: 'Qo\'shish', settings: 'Sozlamalar' }[r.name] || ttl;
     document.title = pageTitle + ' · Mening hamyonim';
-    for (const n of NAVIDS) { const nb = $('#' + n); if (nb) { if (n === NAVOF[r.name]) nb.setAttribute('aria-current', 'page'); else nb.removeAttribute('aria-current'); } }
+    for (const n of NAVIDS) { const nb = $('#' + n); if (nb) { if (n === (isDesk() && NAVDK[r.name] ? NAVDK[r.name] : NAVOF[r.name])) nb.setAttribute('aria-current', 'page'); else nb.removeAttribute('aria-current'); } }
     if (r.name === 'send' || r.name === 'receive') openPick(r.name);
     else { const h1 = el && el.querySelector('h1'); if (h1) { try { h1.focus({ preventScroll: true }); } catch (e) {} } }
     if (r.name === 'mining') loadMining();
@@ -4070,6 +4113,9 @@ function showMain() {
   $('#nav-assets').onclick = () => go('assets');
   $('#nav-add').onclick = () => go('add');
   $('#nav-set').onclick = () => go('settings');
+  $('#nav-px').onclick = () => go('prices');
+  $('#nav-mine').onclick = () => go('mining');
+  $('#nav-ct').onclick = () => go('contacts');
   $('#act-add').onclick = () => go('add');
   $('#set-lock').onclick = () => lock();
   const paintTheme = () => {

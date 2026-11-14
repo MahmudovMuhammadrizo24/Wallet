@@ -13,7 +13,7 @@ const SH=(require('os').tmpdir()+'/hamyon-shots/');
  await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
  await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(1200);
 
- const NAV=await pg.$$eval('.nav button',e=>e.map(x=>x.innerText.trim())); ok('navLabels',JSON.stringify(NAV)==='["Hamyon","Aktivlar","Qo\'shish","Sozlamalar"]'); R.NAV=NAV;
+ const NAV=await pg.$$eval('.nav button:not(.dk)',e=>e.map(x=>x.innerText.trim())); ok('navLabels',JSON.stringify(NAV)==='["Hamyon","Aktivlar","Qo\'shish","Sozlamalar"]'); R.NAV=NAV;
  const rowsVis=async()=>pg.$$eval('#list > tr:not(.ng):not(.ngp-row)',e=>e.filter(x=>x.offsetParent!==null).length);
  const total=await pg.$$eval('#list > tr:not(.ng):not(.ngp-row)',e=>e.length); ok('allVisibleInitially',(await rowsVis())===total&&total>=5);
  const eth0=await pg.$eval('.ngh[data-net=ETH]',e=>({exp:e.getAttribute('aria-expanded'),lbl:e.getAttribute('aria-label')})); ok('ethExpanded',eth0.exp==='true');
