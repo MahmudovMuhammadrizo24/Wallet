@@ -1,0 +1,31 @@
+const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const [,, dir, port] = process.argv;
+const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
+const R={}; const errs=[]; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
+const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/shots/';
+(async()=>{
+ const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:390,height:844},colorScheme:'light',serviceWorkers:'block'}); const pg=await ctx.newPage();
+ pg.on('pageerror',e=>errs.push(e.message)); pg.on('console',m=>{if(m.type()==='error'&&!/Failed to load|net::ERR/.test(m.text()))errs.push(m.text().slice(0,200))});
+ await pg.route(u=>!/^http:\/\/localhost/.test(u.href),r=>r.abort());
+ await pg.goto(`http://localhost:${port}/index.html`); await pg.waitForSelector('#t-create');
+ const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
+ for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
+ await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
+ await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(1200);
+ const pickers=async()=>{const nets=await pg.$$eval('#list .ngb',e=>e.map(b=>b.dataset.net));const o={};for(const n of nets){await pg.click('#list .ngb[data-net='+n+']');await pg.waitForSelector('#tk-sheet');o[n]=await pg.$$eval('#sh-l button[data-k]',e=>e.map(b=>b.dataset.k));await pg.keyboard.press('Escape');await pg.waitForSelector('#tk-sheet',{state:'detached'})}return o};
+ await pg.route(u=>!/^http:\/\/localhost/.test(u.href),async r=>{const u=r.request().url(); const J=o=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(o)}); if(/coingecko/.test(u)){ if(globalThis.PXFAIL) return r.fulfill({status:500,body:'x'}); const ids=(new URL(u).searchParams.get('ids')||'').split(','); const o={}; ids.forEach((id,i)=>o[id]={usd:id==='bitcoin'?60000.5:id==='tether'?1:(i+1)*0.0123,usd_24h_change:i%2?-1.5:2.25}); return J(o); } return r.abort()});
+ await pg.waitForTimeout(500);
+ // Bosh sahifa: gradient hero, 3 tugma, bitta sariq
+ const hero=await pg.evaluate(()=>{const h=document.querySelector('.hero'),cs=getComputedStyle(h);return {bg:cs.backgroundImage.slice(0,40),col:cs.color,btns:[...document.querySelectorAll('.hero .actions button')].map(b=>b.innerText.trim()),yellow:[...document.querySelectorAll('.hero .actions button')].filter(b=>getComputedStyle(b).backgroundColor==='rgb(255, 199, 44)').length}});
+ R.hero=hero; ok('heroGradient',/linear-gradient/.test(hero.bg)&&hero.col==='rgb(255, 255, 255)'); ok('heroOneYellow',hero.yellow===1&&hero.btns.length===3);
+ const nav=async(hh)=>{await pg.evaluate(x=>{location.hash=x},hh); await pg.waitForTimeout(500)};
+ await nav('#/security'); ok('secTitle',await pg.$eval('#pg-security h1',e=>e.textContent.trim()==='Xavfsizlik'));
+ ok('secCards',await pg.evaluate(()=>['pin-card','lim-card','bio-card'].every(i=>document.getElementById(i))));
+ ok('secNoOldPinText',!(await pg.evaluate(()=>document.getElementById('pg-security').textContent)).includes('4-6 xonali'));
+ await nav('#/receive'); ok('recvTitle',await pg.$eval('#ab-title',e=>e.textContent==='Qabul qilish'));
+ await nav('#/send'); ok('sendTitle',await pg.$eval('#ab-title',e=>e.textContent==='Yuborish'));
+ ok('logoNew',await pg.$eval('#brand .logo',e=>e.getAttribute('viewBox')==='0 0 120 120'));
+ const st=await pg.evaluate(async()=>{const o={};for(const f of ['icon-192.png','icon-512.png','icon-maskable-512.png','apple-touch-icon.png','manifest.webmanifest']){o[f]=(await fetch(f)).status}return o}); R.icons=st; ok('iconsExist',Object.values(st).every(v=>v===200));
+ ok('manifestTheme',await pg.evaluate(async()=>(await (await fetch('manifest.webmanifest')).json()).theme_color==='#0b63b8'));
+ R.errs=errs; console.log(JSON.stringify(R,null,1)); await b.close(); srv.close(); process.exit(bad||errs.length?1:0);
+})().catch(e=>{console.log('FAIL',String(e.stack).slice(0,600));process.exit(1)});

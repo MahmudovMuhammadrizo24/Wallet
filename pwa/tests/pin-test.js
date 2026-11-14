@@ -19,16 +19,16 @@ const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]
  // 2) oson PIN
  await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('123456'); R.weak=await pg.$eval('#pin-note',e=>e.textContent);
  // 3) mos kelmagan tasdiq
- await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('482915'); await dlg('482916'); R.mismatch=await pg.$eval('#pin-note',e=>e.textContent);
+ await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('48291537'); await dlg('48291638'); R.mismatch=await pg.$eval('#pin-note',e=>e.textContent);
  // 4) muvaffaqiyatli
- await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('482915'); await dlg('482915'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes('o\'rnatildi'),null,{timeout:15000});
+ await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('48291537'); await dlg('48291537'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes('o\'rnatildi'),null,{timeout:15000});
  R.ok=await pg.$eval('#pin-note',e=>e.textContent); R.state1=await pg.$eval('#pin-state',e=>e.textContent); R.offVisible=await pg.$eval('#pin-off',e=>!e.hidden);
  R.stored=await pg.evaluate(()=>({pin:(localStorage.getItem('cw_pin')||'').length,fail:localStorage.getItem('cw_pinfail'),plain:(localStorage.getItem('cw_pin')||'').includes('abandon')})); 
  R.vaultSame=(await pg.evaluate(()=>localStorage.getItem('cw_vault')))===vault0;
  // 5) qulflash -> PIN
  await pg.click('#lock'); await pg.waitForSelector('#pin-in'); await pg.screenshot({path:SH+'pin-unlock.png'});
  await pg.fill('#pin-in','111222'); await pg.click('#pin-go'); await pg.waitForFunction(()=>document.querySelector('#pin-msg').textContent.includes('Qolgan'),null,{timeout:15000}); R.wrong1=await pg.$eval('#pin-msg',e=>e.textContent);
- await pg.fill('#pin-in','482915'); await pg.click('#pin-go'); await pg.waitForSelector('.page:not([hidden])',{timeout:30000}); R.unlockedByPin=true; R.failReset=await pg.evaluate(()=>localStorage.getItem('cw_pinfail'));
+ await pg.fill('#pin-in','48291537'); await pg.click('#pin-go'); await pg.waitForSelector('.page:not([hidden])',{timeout:30000}); R.unlockedByPin=true; R.failReset=await pg.evaluate(()=>localStorage.getItem('cw_pinfail'));
  // 6) 5 marta xato -> PIN o'chadi
  await pg.click('#lock'); await pg.waitForSelector('#pin-in');
  for(let i=0;i<5;i++){ await pg.waitForSelector('#pin-in'); await pg.fill('#pin-in','000111'); await pg.click('#pin-go'); if(i<4) await pg.waitForFunction(n=>document.querySelector('#pin-msg').textContent.includes('Qolgan urinish: '+n),5-(i+1),{timeout:20000}); }
@@ -36,9 +36,9 @@ const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]
  // 7) so'zlar bilan kirish hamon ishlaydi
  const ins=await pg.$$('#wb input'); for(let i=0;i<words.length;i++) await ins[i].fill(words[i]); await pg.click('#go'); await pg.waitForSelector('.page:not([hidden])',{timeout:30000}); R.wordsStillWork=true;
  // 8) qayta yoqish, so'ng o'chirish va wipe
- await pg.evaluate(()=>{location.hash='#/security'}); await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('482915'); await dlg('482915'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes('o\'rnatildi'),null,{timeout:15000});
+ await pg.evaluate(()=>{location.hash='#/security'}); await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('48291537'); await dlg('48291537'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes('o\'rnatildi'),null,{timeout:15000});
  await pg.click('#pin-off'); await pg.waitForSelector('#dlg-ok'); await pg.click('#dlg-ok'); await pg.waitForTimeout(200); R.off={pin:await pg.evaluate(()=>localStorage.getItem('cw_pin')),state:await pg.$eval('#pin-state',e=>e.textContent)};
- await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('482915'); await dlg('482915'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes('o\'rnatildi'),null,{timeout:15000});
+ await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('48291537'); await dlg('48291537'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes('o\'rnatildi'),null,{timeout:15000});
  await pg.click('#lock'); await pg.waitForSelector('#wipe'); await pg.click('#wipe'); await pg.waitForSelector('#dlg-ok'); await pg.click('#dlg-ok'); await pg.waitForSelector('#t-create');
  R.afterWipe=await pg.evaluate(()=>({pin:localStorage.getItem('cw_pin'),fail:localStorage.getItem('cw_pinfail'),vault:localStorage.getItem('cw_vault')}));
  R.errs=errs; console.log(JSON.stringify(R,null,1)); await b.close(); srv.close();

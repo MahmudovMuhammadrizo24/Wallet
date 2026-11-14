@@ -29,6 +29,7 @@ import java.security.KeyStore;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String HOST = "appassets.androidplatform.net";
     private static final String HOME = "https://" + HOST + "/assets/www/index.html";
     private static final String ALIAS = "hamyon_bio_v1";
+    private static final String PEPPER_ALIAS = "hamyon_pin_pepper_v1";
 
     private WebView web;
 
@@ -231,6 +233,38 @@ public class MainActivity extends AppCompatActivity {
 
     /* ---------- veb sahifaga ochiladigan yagona ko'prik (faqat o'z fayllarimiz yuklanadi) ---------- */
     public class Bridge {
+        /* PIN kaliti uchun "pepper": Keystore ichidagi eksport qilib bo'lmaydigan HMAC kaliti tuzni imzolaydi.
+           Kalit qurilmadan chiqmaydi, shuning uchun shifrlangan fayl boshqa joyda oflayn topilmaydi. */
+        @JavascriptInterface
+        public String pepper(String saltB64) {
+            try {
+                byte[] salt = Base64.decode(saltB64, Base64.NO_WRAP);
+                KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
+                ks.load(null);
+                if (!ks.containsAlias(PEPPER_ALIAS)) {
+                    KeyGenerator kg = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_HMAC_SHA256, "AndroidKeyStore");
+                    kg.init(new KeyGenParameterSpec.Builder(PEPPER_ALIAS, KeyProperties.PURPOSE_SIGN).build());
+                    kg.generateKey();
+                }
+                Mac mac = Mac.getInstance("HmacSHA256");
+                mac.init((SecretKey) ks.getKey(PEPPER_ALIAS, null));
+                return Base64.encodeToString(mac.doFinal(salt), Base64.NO_WRAP);
+            } catch (Exception e) {
+                return "";
+            }
+        }
+
+        @JavascriptInterface
+        public void clearPepper() {
+            try {
+                KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
+                ks.load(null);
+                ks.deleteEntry(PEPPER_ALIAS);
+            } catch (Exception ignored) {
+                // kalit allaqachon yo'q
+            }
+        }
+
         @JavascriptInterface
         public String avail() {
             try {

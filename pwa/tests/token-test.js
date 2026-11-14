@@ -1,5 +1,5 @@
 const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
-const [,, dir, port] = process.argv; const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/shots/'; const PROBES='/mnt/skills/plugin-files/0d07a0ac-4262-4453-bbc9-01ee3cc8d90f/scripts/';
+const [,, dir, port] = process.argv; const SH=(require('os').tmpdir()+'/hamyon-shots/'); const PROBES=(__dirname+'/');
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
 global.R={}; const R=global.R; const USDC='0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', DAI='0x6b175474e89094c44da98b954eedeac495271d0f', USDT='0xdac17f958d2ee523a2206206994597c13d831ec7';
 const REC='0x742d35Cc6634C0532925a3b844Bc454e4438f44e';

@@ -1,7 +1,7 @@
 const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
 const [,, dir, port] = process.argv;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
-const TR='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/tonref/node_modules/';
+const TR=(require('path').resolve(__dirname,'..','node_modules')+'/');
 const {Address,Cell,beginCell,loadMessage,loadMessageRelaxed}=require(TR+'@ton/core'); const nacl=require(TR+'tweetnacl');
 const R={}; const errs=[]; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
 const DEST=Address.parseRaw('0:'+require('crypto').createHash('sha256').update('dest').digest('hex')).toString({bounceable:false,urlSafe:true});

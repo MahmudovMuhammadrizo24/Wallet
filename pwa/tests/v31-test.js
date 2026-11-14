@@ -1,0 +1,44 @@
+const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const [,, dir, port] = process.argv;
+const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
+const R={}; const errs=[]; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
+const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/shots/';
+(async()=>{
+ const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:390,height:844},colorScheme:'light',serviceWorkers:'block'}); const pg=await ctx.newPage();
+ pg.on('pageerror',e=>errs.push(e.message)); pg.on('console',m=>{if(m.type()==='error'&&!/Failed to load|net::ERR/.test(m.text()))errs.push(m.text().slice(0,200))});
+ await pg.route(u=>!/^http:\/\/localhost/.test(u.href),r=>r.abort());
+ await pg.goto(`http://localhost:${port}/index.html`); await pg.waitForSelector('#t-create');
+ const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
+ for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
+ await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
+ await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(1200);
+ const pickers=async()=>{const nets=await pg.$$eval('#list .ngb',e=>e.map(b=>b.dataset.net));const o={};for(const n of nets){await pg.click('#list .ngb[data-net='+n+']');await pg.waitForSelector('#tk-sheet');o[n]=await pg.$$eval('#sh-l button[data-k]',e=>e.map(b=>b.dataset.k));await pg.keyboard.press('Escape');await pg.waitForSelector('#tk-sheet',{state:'detached'})}return o};
+ await pg.route(u=>!/^http:\/\/localhost/.test(u.href),async r=>{const u=r.request().url(); const J=o=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(o)}); if(/coingecko/.test(u))return J({bitcoin:{usd:60000,usd_24h_change:2},ethereum:{usd:3000,usd_24h_change:-1},tether:{usd:1,usd_24h_change:0}}); return r.abort()});
+ await pg.waitForTimeout(500);
+ // Bosh sahifa: gradient hero, 3 tugma, bitta sariq
+ const hero=await pg.evaluate(()=>{const h=document.querySelector('.hero'),cs=getComputedStyle(h);return {bg:cs.backgroundImage.slice(0,40),col:cs.color,btns:[...document.querySelectorAll('.hero .actions button')].map(b=>b.innerText.trim()),yellow:[...document.querySelectorAll('.hero .actions button')].filter(b=>getComputedStyle(b).backgroundColor==='rgb(255, 199, 44)').length}});
+ R.hero=hero; ok('heroGradient',/linear-gradient/.test(hero.bg)&&hero.col==='rgb(255, 255, 255)'); ok('heroOneYellow',hero.yellow===1&&hero.btns.length===3);
+ await pg.evaluate(()=>{location.hash='#/add'}); await pg.waitForSelector('#ad-nets .tile'); await pg.waitForTimeout(800);
+ const tiles=await pg.$$eval('#ad-nets .tile',e=>e.map(b=>b.innerText.trim())); R.tiles=tiles; ok('tiles',tiles.length>=7&&tiles.some(t=>/Ethereum/.test(t))&&tiles.some(t=>/Tron/.test(t)));
+ ok('tileSelected',await pg.$$eval('#ad-nets .tile[aria-checked=true]',e=>e.length)===1);
+ ok('tile44',await pg.$$eval('#ad-nets .tile',e=>e.every(b=>b.getBoundingClientRect().height>=43.5)));
+ ok('orderTokensBeforeForm',await pg.evaluate(()=>{const a=document.querySelector('#ad-nets'),f=document.querySelector('#fm-h');return !!(a&&f&&(a.compareDocumentPosition(f)&Node.DOCUMENT_POSITION_FOLLOWING))}));
+ const rows=await pg.$$eval('#ad-list .addrow',e=>e.map(b=>({k:b.dataset.k,t:b.innerText.replace(/\s+/g,' ')}))); R.rows=rows; ok('rowsExist',rows.length>=3);
+ ok('rowShortName',rows.every(r=>!/ERC-20|\(/.test(r.t.split('·')[0])));
+ await pg.click('#tk-add'); await pg.waitForTimeout(200); ok('nothingSelectedMsg',/Avval/.test(await pg.$eval('#tk-msg',e=>e.textContent)));
+ await pg.click('#ad-nets .tile:nth-child(2)'); await pg.waitForTimeout(300);
+ ok('switchNet',await pg.$eval('#ad-nets .tile:nth-child(2)',e=>e.getAttribute('aria-checked')==='true'));
+ const free=await pg.$$eval('#ad-list .addrow:not(.done):not(.nob)',e=>e.map(b=>b.dataset.k));
+ if(free.length){const k=free[0]; const n0=await pg.evaluate(()=>data.items.length);
+  await pg.click('#ad-list .addrow[data-k="'+k+'"]'); ok('rowSelected',await pg.$eval('#ad-list .addrow[data-k="'+k+'"]',e=>e.getAttribute('aria-pressed')==='true'));
+  await pg.click('#tk-add'); await pg.waitForTimeout(1200);
+  ok('addedViaRow',await pg.evaluate(()=>data.items.length)>n0);
+  ok('rowDoneAfter',await pg.$eval('#ad-list .addrow[data-k="'+k+'"]',e=>e.classList.contains('done')));
+ } else ok('freeRowAvail',false);
+ await pg.click('#ad-nets .tile:nth-child(1)'); await pg.waitForTimeout(300);
+ const free2=await pg.$$eval('#ad-list .addrow:not(.done):not(.nob)',e=>e.length);
+ if(free2){const n1=await pg.evaluate(()=>data.items.length); await pg.click('#ad-all'); await pg.waitForTimeout(1500); ok('addAll',await pg.evaluate(()=>data.items.length)>n1);}
+ ok('hasWarn',await pg.$eval('#pg-add .warn',e=>e.textContent.length>10));
+ await pg.screenshot({path:SH+'v31-t.png'});
+ R.errs=errs; console.log(JSON.stringify(R,null,1)); await b.close(); srv.close(); process.exit(bad||errs.length?1:0);
+})().catch(e=>{console.log('FAIL',String(e.stack).slice(0,600));process.exit(1)});
