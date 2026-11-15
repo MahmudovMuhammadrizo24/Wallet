@@ -10,8 +10,8 @@ android {
         applicationId 'app.hamyon.wallet'
         minSdk 26
         targetSdk 34
-        versionCode 16
-        versionName '16'
+        versionCode 17
+        versionName '40'
     }
 
     signingConfigs {
