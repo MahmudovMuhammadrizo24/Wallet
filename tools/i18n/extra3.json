@@ -1,0 +1,8 @@
+{
+"Diagrammalar": {"en":"Charts","ru":"Диаграммы","tr":"Grafikler","ar":"الرسوم البيانية","zh":"图表"},
+"Tokenlaringizning joriy narxi va ulushi": {"en":"The current price and share of your tokens","ru":"Текущая цена и доля ваших токенов","tr":"Tokenlerinizin güncel fiyatı ve payı","ar":"السعر الحالي وحصة الرموز الخاصة بك","zh":"您代币的当前价格和占比"},
+"Diagramma tahlili": {"en":"Chart analysis","ru":"Анализ диаграммы","tr":"Grafik analizi","ar":"تحليل الرسم البياني","zh":"图表分析"},
+"Natija hali yo'q. Yuqoridagi tugmani bosing.": {"en":"No result yet. Tap the button above.","ru":"Результата пока нет. Нажмите кнопку выше.","tr":"Henüz sonuç yok. Yukarıdaki düğmeye dokunun.","ar":"لا توجد نتيجة بعد. اضغط على الزر أعلاه.","zh":"暂无结果。请点击上方按钮。"},
+"Aktivlaringiz yo'q, shuning uchun diagramma chizib bo'lmaydi.": {"en":"You have no assets, so a chart can't be drawn.","ru":"У вас нет активов, поэтому диаграмму построить нельзя.","tr":"Varlığınız olmadığı için grafik çizilemiyor.","ar":"ليس لديك أصول، لذا لا يمكن رسم الرسم البياني.","zh":"您没有资产，因此无法绘制图表。"},
+"Diagrammalar faqat narxi ma'lum aktivlarni ko'rsatadi, AQSh dollarida.": {"en":"Charts show only assets with a known price, in US dollars.","ru":"Диаграммы показывают только активы с известной ценой, в долларах США.","tr":"Grafikler yalnızca fiyatı bilinen varlıkları, ABD doları cinsinden gösterir.","ar":"تعرض الرسوم البيانية فقط الأصول ذات السعر المعروف، بالدولار الأمريكي.","zh":"图表仅显示已知价格的资产（以美元计）。"}
+}

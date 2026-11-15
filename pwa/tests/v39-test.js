@@ -13,7 +13,7 @@ const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratc
  const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
  for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
  await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000}); await pg.waitForTimeout(600);
- const tips=await pg.$$eval('#pg-home .tipcard a',e=>e.map(a=>a.getAttribute('href'))); R.tips=tips; ok('homeOnlyPrices',tips.length===1&&tips[0]==='#/prices');
+ const tips=await pg.$$eval('#pg-home .tipcard a',e=>e.map(a=>a.getAttribute('href'))); R.tips=tips; ok('homeOnlyPrices',tips.length===2&&tips[0]==='#/prices'&&tips[1]==='#/charts');
  ok('noQuickTip',(await pg.$$('#qk-tip,#qk-hide')).length===0);
  await pg.screenshot({path:SH+'v39-home.png',fullPage:true});
  await pg.evaluate(()=>{location.hash='#/settings'}); await pg.waitForTimeout(400);
