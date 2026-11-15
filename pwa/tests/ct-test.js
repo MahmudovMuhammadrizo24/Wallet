@@ -1,5 +1,5 @@
 const WORK = process.env.WORK || require('os').tmpdir() + '/hamyon-work'; require('fs').mkdirSync(WORK, { recursive: true });
-const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const { chromium } = require('playwright'); const F=require('./_flat.js'); const http=require('http'),fs=require('fs'),path=require('path');
 const [,, dir, port] = process.argv; const SH=WORK+'/'; const PROBES=__dirname+'/';
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
 global.R={}; const R=global.R;
@@ -24,7 +24,7 @@ global.R={}; const R=global.R;
  await pg.screenshot({path:SH+'ct-page.png',fullPage:true});
  const core=JSON.parse(await pg.evaluate(fs.readFileSync(PROBES+'probe-core.js','utf8'))); R.probe={c:core.contrast.measured,f:core.contrast.failures.length,small:core.tapTargets.tooSmall.length,ov:core.layout.horizontalOverflow};
  // yuborish formasida tanlash
- await pg.click('#nav-assets'); await pg.waitForSelector('#list [data-act=addr]'); await pg.click('#list [data-act=addr]'); await pg.click('#rt-send'); await pg.waitForSelector('#sd-book');
+ await pg.evaluate(()=>{location.hash='#/net/BTC'}); await pg.waitForSelector('#list [data-act=addr]'); await pg.click('#list [data-act=addr]'); await pg.click('#rt-send'); await pg.waitForSelector('#sd-book');
  R.sendOptions=await pg.$$eval('#sd-book option',e=>e.map(x=>x.textContent)); await pg.selectOption('#sd-book',{index:1}); R.sendTo=await pg.$eval('#sd-to',e=>e.value);
  // qayta yuklash -> kirish -> saqlanganmi
  await pg.reload(); await pg.waitForSelector('#go'); const ins=await pg.$$('#wb input'); for(let i=0;i<words.length;i++) await ins[i].fill(words[i]); await pg.click('#go'); await pg.waitForSelector('.page:not([hidden])',{timeout:30000});

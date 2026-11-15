@@ -1,4 +1,4 @@
-const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const { chromium } = require('playwright'); const F=require('./_flat.js'); const http=require('http'),fs=require('fs'),path=require('path');
 const [,, dir, port] = process.argv;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
 const TR=(require('path').resolve(__dirname,'..','node_modules')+'/');
@@ -28,10 +28,10 @@ let walletState={account_state:'active',seqno:7,balance:'5000000000'},destState=
  // 2) USDT (TON) qo'shish
  await pg.click('#nav-add'); await pg.waitForSelector('#tk-add'); await pg.selectOption('#tk-sel','USDT_TON'); await pg.click('#tk-add'); await pg.waitForTimeout(600);
  ok('usdtTonAdded',await pg.evaluate(()=>data.items.some(x=>x.coin==='USDT_TON')));
- await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(6000);
+ await pg.click('#nav-assets'); await pg.waitForSelector('#net-list li'); await pg.waitForTimeout(6000);
  R.bal=await pg.evaluate(()=>({TON:balances[data.items.find(x=>x.coin==='TON').id],USDT_TON:balances[data.items.find(x=>x.coin==='USDT_TON').id]}));
  ok('tonBalance',R.bal.TON===2.5); ok('usdtTonBalanceFiltersFakeJetton',R.bal.USDT_TON===12.5);
- R.tonGroup=await pg.$$eval('#list > tr:not(.ngp-row)',e=>e.map(x=>x.classList.contains('ng')?'## '+x.querySelector('th').innerText.replace(/\s+/g,' '):'   '+x.querySelector('.a-n').innerText.replace(/\s+/g,' ')).filter(x=>/TON|USDT/.test(x)));
+ R.tonGroup=(await F.struct(pg)).filter(x=>/TON|USDT/.test(x));
  R.splSend=await pg.evaluate(()=>canSend(data.items.find(x=>x.coin==='USDT_TON'))); ok('usdtTonNotSendable',R.splSend===false);
  ok('tonSendable',await pg.evaluate(()=>canSend(data.items.find(x=>x.coin==='TON'))));
  // 3) tarix

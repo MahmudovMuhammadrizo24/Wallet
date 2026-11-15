@@ -11,7 +11,7 @@ const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratc
  const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
  for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
  await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
- await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(1200);
+ await pg.click('#nav-assets'); await pg.waitForSelector('#net-list li'); await pg.waitForTimeout(1200);
  const pickers=async()=>{const nets=await pg.$$eval('#list .ngb',e=>e.map(b=>b.dataset.net));const o={};for(const n of nets){await pg.click('#list .ngb[data-net='+n+']');await pg.waitForSelector('#tk-sheet');o[n]=await pg.$$eval('#sh-l button[data-k]',e=>e.map(b=>b.dataset.k));await pg.keyboard.press('Escape');await pg.waitForSelector('#tk-sheet',{state:'detached'})}return o};
  await pg.route(u=>!/^http:\/\/localhost/.test(u.href),async r=>{const u=r.request().url(); const J=o=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(o)}); if(/coingecko/.test(u)){ if(globalThis.PXFAIL) return r.fulfill({status:500,body:'x'}); const ids=(new URL(u).searchParams.get('ids')||'').split(','); const o={}; ids.forEach((id,i)=>o[id]={usd:id==='bitcoin'?60000.5:id==='tether'?1:(i+1)*0.0123,usd_24h_change:i%2?-1.5:2.25}); return J(o); } return r.abort()});
  await pg.waitForTimeout(500);

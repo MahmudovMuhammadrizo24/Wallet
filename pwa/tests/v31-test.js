@@ -1,4 +1,4 @@
-const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const { chromium } = require('playwright'); const F=require('./_flat.js'); const http=require('http'),fs=require('fs'),path=require('path');
 const [,, dir, port] = process.argv;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
 const R={}; const errs=[]; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
@@ -11,8 +11,8 @@ const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratc
  const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
  for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
  await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
- await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(1200);
- const pickers=async()=>{const nets=await pg.$$eval('#list .ngb',e=>e.map(b=>b.dataset.net));const o={};for(const n of nets){await pg.click('#list .ngb[data-net='+n+']');await pg.waitForSelector('#tk-sheet');o[n]=await pg.$$eval('#sh-l button[data-k]',e=>e.map(b=>b.dataset.k));await pg.keyboard.press('Escape');await pg.waitForSelector('#tk-sheet',{state:'detached'})}return o};
+ await pg.click('#nav-assets'); await pg.waitForSelector('#net-list li'); await pg.waitForTimeout(1200);
+ const pickers=()=>F.pickers(pg);
  await pg.route(u=>!/^http:\/\/localhost/.test(u.href),async r=>{const u=r.request().url(); const J=o=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(o)}); if(/coingecko/.test(u))return J({bitcoin:{usd:60000,usd_24h_change:2},ethereum:{usd:3000,usd_24h_change:-1},tether:{usd:1,usd_24h_change:0}}); return r.abort()});
  await pg.waitForTimeout(500);
  // Bosh sahifa: gradient hero, 3 tugma, bitta sariq

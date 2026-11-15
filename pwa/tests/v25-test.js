@@ -1,4 +1,4 @@
-const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const { chromium } = require('playwright'); const F=require('./_flat.js'); const http=require('http'),fs=require('fs'),path=require('path');
 const [,, dir, port] = process.argv;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
 const TR=(require('path').resolve(__dirname,'..','node_modules')+'/');
@@ -69,7 +69,7 @@ const SH=(require('os').tmpdir()+'/hamyon-shots/');
  await p2.evaluate(()=>{navigator.mediaDevices.getUserMedia=async()=>{throw new Error('NotAllowedError')}}); await p2.click('#sd-scan'); await p2.waitForSelector('#qr-scan'); await p2.waitForTimeout(300);
  ok('deniedMessage',/Kameradan foydalanib bo/.test(await p2.$eval('#qr-m',e=>e.textContent))); await p2.click('#qr-x'); await p2.waitForSelector('#qr-scan',{state:'detached'});
  // ---- 4) Yangi tokenlar
- await p2.evaluate(()=>{location.hash='#/assets'}); await p2.waitForSelector('#list .ngb[data-net=ETH]'); await p2.click('#list .ngb[data-net=ETH]'); await p2.waitForSelector('#tk-sheet');
+ await p2.evaluate(()=>{location.hash='#/net/ETH'}); await p2.waitForSelector('#net-add:not([hidden])'); await p2.click('#net-add'); await p2.waitForSelector('#tk-sheet');
  const ks=await p2.$$eval('#sh-l button[data-k]',e=>e.map(x=>x.dataset.k)); ok('newTokensOffered',['AAVE_ERC20','PEPE_ERC20','LDO_ERC20','CRV_ERC20'].every(k=>ks.includes(k)));
  await p2.click('#sh-l button[data-k=AAVE_ERC20]'); await p2.waitForSelector('#tk-sheet',{state:'detached'}); await p2.waitForTimeout(800);
  const aave=await p2.evaluate(()=>{const it=data.items.find(x=>x.coin==='AAVE_ERC20');const e=data.items.find(x=>x.coin==='ETH');return it&&{same:it.address===e.address,cg:COINS.AAVE_ERC20.cg,send:canSend(it),addr:ERC20.AAVE_ERC20.addr}}); ok('aaveAdded',!!aave&&aave.same&&aave.cg==='aave'&&aave.send===true);

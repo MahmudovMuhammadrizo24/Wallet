@@ -12,10 +12,10 @@ const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratc
  await pg.goto(`http://localhost:${port}/index.html`); await pg.waitForSelector('#t-create');
  const LN=['uz','en','ru','tr','ar','zh'];
  // leftover-Uzbek skaneri (ko'rinadigan matn tugunlari + atributlar)
- const scan=()=>pg.evaluate(()=>{const uzKeys=new Set(Object.keys(I18N.en)); const bad=[]; const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+ const scan=()=>pg.evaluate(()=>{const uzKeys=new Set(Object.keys(i18d('en'))); const bad=[]; const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
   const heur=/\b(uchun|bilan|hamyon\w*|yuborish|miqdor\w*|manzil\w*|tarmoq\w*|sozlamalar|narx\w*|qidirish|kiriting|xato\w*|qulf\w*|ochish|tasdiqlash|bekor|saqlash|nusxa|mavjud|yetarli|kerak|bo'lmadi|bo'sh|avval|keyin|hozir)\b/i;
-  for(let n=w.nextNode();n;n=w.nextNode()){const el=n.parentElement; if(!el||['SCRIPT','STYLE'].includes(el.tagName)||el.closest('[hidden],[data-notr]'))continue; if(!el.getClientRects().length)continue; const t=n.nodeValue.trim().replace(/\s+/g,' '); if(!t)continue; if((uzKeys.has(t)&&I18N.en[t]!==t)||heur.test(t)) bad.push(t.slice(0,70))}
-  document.querySelectorAll('[aria-label],[placeholder],[title]').forEach(e=>{ if(e.closest('[data-notr]'))return; for(const a of ['aria-label','placeholder','title']){const v=e.getAttribute(a); if(v&&((uzKeys.has(v)&&I18N.en[v]!==v)||/\b(uchun|bilan|hamyon|tanlang|kiriting)\b/i.test(v))) bad.push(a+':'+v.slice(0,60))}});
+  for(let n=w.nextNode();n;n=w.nextNode()){const el=n.parentElement; if(!el||['SCRIPT','STYLE'].includes(el.tagName)||el.closest('[hidden],[data-notr]'))continue; if(!el.getClientRects().length)continue; const t=n.nodeValue.trim().replace(/\s+/g,' '); if(!t)continue; if((uzKeys.has(t)&&i18d('en')[t]!==t)||heur.test(t)) bad.push(t.slice(0,70))}
+  document.querySelectorAll('[aria-label],[placeholder],[title]').forEach(e=>{ if(e.closest('[data-notr]'))return; for(const a of ['aria-label','placeholder','title']){const v=e.getAttribute(a); if(v&&((uzKeys.has(v)&&i18d('en')[v]!==v)||/\b(uchun|bilan|hamyon|tanlang|kiriting)\b/i.test(v))) bad.push(a+':'+v.slice(0,60))}});
   return [...new Set(bad)]});
  // 1) kirish ekrani: tanlagich, har til uchun lang/dir, matn o'zgaradi
  ok('selExists',(await pg.$$('#lang-sel option')).length===6);
@@ -33,7 +33,7 @@ const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratc
  for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
  await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
  ok('homeLangKept',(await pg.evaluate(()=>document.documentElement.lang))==='ru');
- const routes=['home','assets','prices','contacts','mining','settings','add','send'];
+ const routes=['home','assets','net/ETH','net/TRX','prices','contacts','mining','settings','add','send'];
  const lo={};
  await pg.evaluate(()=>{location.hash='#/settings'}); await pg.waitForTimeout(500);
  ok('settingsSeg',(await pg.$$('#lang-seg button')).length===6);

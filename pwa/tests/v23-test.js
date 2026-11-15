@@ -11,24 +11,13 @@ const SH=(require('os').tmpdir()+'/hamyon-shots/');
  const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
  for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
  await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
- await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(1200);
+ await pg.click('#nav-assets'); await pg.waitForSelector('#net-list li'); await pg.waitForTimeout(1200);
 
+ ok('netRows',(await pg.$$eval('#net-list li',e=>e.length))>=4&&(await pg.$$('.ngh,#net-chips')).length===0);
  const NAV=await pg.$$eval('.nav button:not(.dk)',e=>e.map(x=>x.innerText.trim())); ok('navLabels',JSON.stringify(NAV)==='["Hamyon","Aktivlar","Qo\'shish","Sozlamalar"]'); R.NAV=NAV;
- const rowsVis=async()=>pg.$$eval('#list > tr:not(.ng):not(.ngp-row)',e=>e.filter(x=>x.offsetParent!==null).length);
- const total=await pg.$$eval('#list > tr:not(.ng):not(.ngp-row)',e=>e.length); ok('allVisibleInitially',(await rowsVis())===total&&total>=5);
- const eth0=await pg.$eval('.ngh[data-net=ETH]',e=>({exp:e.getAttribute('aria-expanded'),lbl:e.getAttribute('aria-label')})); ok('ethExpanded',eth0.exp==='true');
- await pg.click('.ngh[data-net=ETH]'); await pg.waitForTimeout(200);
- const st=await pg.evaluate(()=>{const h=document.querySelector('.ngh[data-net=ETH]');const tr=h.closest('tr');let n=tr.nextElementSibling,hid=0,vis=0;while(n&&!n.classList.contains('ng')){(n.offsetParent===null?hid++:vis++);n=n.nextElementSibling}return {exp:h.getAttribute('aria-expanded'),hid,vis,focus:document.activeElement===h,td:tr.querySelector('td').innerText}});
- R.st=st; ok('ethCollapsed',st.exp==='false'&&st.hid>=3&&st.vis===0); ok('focusKeptOnHeader',st.focus);
- ok('otherGroupsUnaffected',(await rowsVis())===total-st.hid+ (await pg.$$eval('#list > tr.ng-hide:not(.ngp-row):not(.ng)',e=>e.length)>0?0:0) || true);
- const btcVis=await pg.evaluate(()=>{const h=document.querySelector('.ngh[data-net=BTC]');let n=h.closest('tr').nextElementSibling;return n.offsetParent!==null}); ok('btcStillVisible',btcVis);
  await pg.screenshot({path:SH+'v23-assets.png'});
  await pg.reload(); await pg.waitForSelector('#go'); {const ins=await pg.$$('#wb input'); for(let i=0;i<words.length;i++) await ins[i].fill(words[i]); await pg.click('#go'); await pg.waitForSelector('.page:not([hidden])',{timeout:30000}); await pg.waitForTimeout(800);}
- await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(600);
- ok('collapsePersists',await pg.$eval('.ngh[data-net=ETH]',e=>e.getAttribute('aria-expanded'))==='false');
- await pg.click('.ngh[data-net=ETH]'); await pg.waitForTimeout(200); ok('reExpands',(await rowsVis())===total);
- // yig'ilgan holatda token qo'shish tugmasi ham yashirinadi
- await pg.click('.ngh[data-net=POLY]'); ok('ngpHiddenWhenCollapsed',await pg.evaluate(()=>{const h=document.querySelector('.ngh[data-net=POLY]');let n=h.closest('tr').nextElementSibling;let any=false;while(n&&!n.classList.contains('ng')){if(n.offsetParent!==null)any=true;n=n.nextElementSibling}return !any})); await pg.click('.ngh[data-net=POLY]');
+ await pg.click('#nav-assets'); await pg.waitForSelector('#net-list li'); await pg.waitForTimeout(600);
  // Sozlamalar
  await pg.click('#nav-set'); await pg.waitForSelector('#pg-settings:not([hidden])'); await pg.waitForTimeout(300);
  const set=await pg.evaluate(()=>{const p=document.querySelector('#pg-settings');return {heads:[...p.querySelectorAll('h2.pgh')].map(x=>x.innerText),groups:[...p.querySelectorAll('.group')].map(g=>[...g.querySelectorAll('.rowlink b')].map(b=>b.innerText)),icons:[...p.querySelectorAll('.rowlink .ri svg')].map(s=>s.innerHTML.length),small:[...p.querySelectorAll('button,a')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height<43.5}).length}});
