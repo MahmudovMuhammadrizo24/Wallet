@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+"""v38 -> v39: Bosh sahifadan 2 ta maslahat kartasi olib tashlandi (Sozlamalarda allaqachon bor), kirish ekranidan til tanlagich olib tashlandi (til faqat Sozlamalarda)."""
+import re, hashlib, base64, os, sys, json
+SRC, OUT = sys.argv[1], sys.argv[2]; os.makedirs(OUT, exist_ok=True)
+HERE = os.path.dirname(os.path.abspath(__file__))
+html = open(os.path.join(SRC, 'index.html'), encoding='utf-8').read()
+def sub(old, new, label, count=1):
+    global html
+    n = html.count(old)
+    if n != count: sys.exit(f'EDIT FAILED [{label}]: expected {count}, found {n}')
+    html = html.replace(old, new)
+
+# 1) Bosh sahifa: "Birinchi marta..." va "Parol yoki Face ID" kartalari
+html, k = re.subn(r'    <div class="tipcard"><a class="rowlink" href="#/security">.*?</a></div>\n', '', html, count=1, flags=re.S)
+assert k == 1, 'tip security'
+html, k = re.subn(r'    <div class="tipcard" id="qk-tip" hidden>.*?</div>\n', '', html, count=1, flags=re.S)
+assert k == 1, 'qk-tip'
+sub("  const t = $('#qk-tip'); if (t) t.hidden = !!(on || bo || store.get('cw_qtip'));\n", "", 'paintQuick-tip')
+sub("  $('#qk-hide').onclick = () => { store.set('cw_qtip', '1'); paintQuick(); };\n", "", 'qk-hide')
+
+# 2) Kirish ekrani: til tanlagich yo'q
+html, k = re.subn(r'    <div class="langsel">.*?</div>\n', '', html, count=1, flags=re.S); assert k == 1, 'langsel'
+sub("  $('#lang-sel').onchange = e => setLang(e.target.value);\n", "", 'lang-onchange')
+sub("  const s = document.getElementById('lang-sel'); if (s) s.value = l;\n", "", 'lang-sel-set')
+html = '\n'.join(l for l in html.split('\n') if not (l.startswith('.langsel') or l.startswith('[dir=rtl] .langsel')))
+
+# 3) versiya 39 (+ til lug'ati kalitlari)
+D = json.load(open(os.path.join(HERE, 'i18n', 'dict.json'), encoding='utf-8'))
+VER = {'en': 'My wallet · version 39', 'ru': 'Мой кошелёк · версия 39', 'tr': 'Cüzdanım · sürüm 39', 'ar': 'محفظتي · الإصدار 39', 'zh': '我的钱包 · 版本 39'}
+for l in D:
+    nd = {}
+    for k, v in D[l].items():
+        if k == 'Mening hamyonim · versiya 36': nd['Mening hamyonim · versiya 39'] = VER[l]; continue
+        nd[k.replace('Versiya 36.', 'Versiya 39.')] = v.replace('{N}', '39')
+    D[l] = nd
+I18S = '{' + ','.join(json.dumps(l) + ':' + json.dumps(json.dumps(D[l], ensure_ascii=False, separators=(',', ':')), ensure_ascii=False).replace('</', '<\\/') for l in D) + '}'
+a = html.index('const I18S = '); b = html.index(';\nconst I18N = {};', a)
+html = html[:a] + 'const I18S = ' + I18S + html[b:]
+sub("Mening hamyonim · versiya 38", "Mening hamyonim · versiya 39", 'ver1')
+sub("Versiya 38. Ilova", "Versiya 39. Ilova", 'ver2')
+
+scripts = re.findall(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', html, re.S)
+hs = ["'sha256-" + base64.b64encode(hashlib.sha256(s.encode('utf-8')).digest()).decode() + "'" for s in scripts]
+mm = re.search(r"script-src 'wasm-unsafe-eval'((?: 'sha256-[^']+')+)", html)
+assert mm and len(hs) == len(mm.group(1).split())
+html = html.replace(mm.group(0), "script-src 'wasm-unsafe-eval' " + ' '.join(hs))
+open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(html)
+print('OK', len(html))

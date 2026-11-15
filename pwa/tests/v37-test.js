@@ -18,16 +18,16 @@ const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratc
   document.querySelectorAll('[aria-label],[placeholder],[title]').forEach(e=>{ if(e.closest('[data-notr]'))return; for(const a of ['aria-label','placeholder','title']){const v=e.getAttribute(a); if(v&&((uzKeys.has(v)&&i18d('en')[v]!==v)||/\b(uchun|bilan|hamyon|tanlang|kiriting)\b/i.test(v))) bad.push(a+':'+v.slice(0,60))}});
   return [...new Set(bad)]});
  // 1) kirish ekrani: tanlagich, har til uchun lang/dir, matn o'zgaradi
- ok('selExists',(await pg.$$('#lang-sel option')).length===6);
+ ok('noAuthLangSelect',(await pg.$$('#lang-sel,.langsel')).length===0);
  const h1={}; const authBad={};
- for(const l of LN){ await pg.selectOption('#lang-sel',l); await pg.waitForTimeout(80);
+ for(const l of LN){ await pg.evaluate(l=>localStorage.setItem('cw_lang',l),l); await pg.reload(); await pg.waitForSelector('#t-create'); await pg.waitForTimeout(80);
   const s=await pg.evaluate(()=>({lang:document.documentElement.lang,dir:document.documentElement.dir,h1:document.querySelector('h1').textContent,title:document.title,st:localStorage.getItem('cw_lang')}));
   h1[l]=s.h1; ok('auth-'+l,s.lang===l&&s.dir===(l==='ar'?'rtl':'ltr')&&s.st===l);
   if(l!=='uz'){ authBad[l]=await scan(); }
  }
  R.h1=h1; ok('h1Distinct',new Set(Object.values(h1)).size===6); R.authBad=authBad; for(const l in authBad) ok('authClean-'+l,authBad[l].length===0);
  // 2) saqlanishi: reload -> tanlangan til qoladi
- await pg.selectOption('#lang-sel','ru'); await pg.reload(); await pg.waitForSelector('#t-create'); ok('persist',(await pg.evaluate(()=>document.documentElement.lang))==='ru'&&(await pg.$eval('#lang-sel',e=>e.value))==='ru');
+ await pg.evaluate(()=>localStorage.setItem('cw_lang','ru')); await pg.reload(); await pg.waitForSelector('#t-create'); ok('persist',(await pg.evaluate(()=>document.documentElement.lang))==='ru');
  // 3) hamyon yaratish (ruscha UI), keyin sahifalar bo'ylab
  const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
  for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);

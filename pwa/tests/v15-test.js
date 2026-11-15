@@ -12,22 +12,20 @@ const R={};
  for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
  await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
  const vis=s=>pg.$eval(s,e=>!e.hidden&&e.offsetParent!==null);
- R.homeTip=await vis('#qk-tip');
+ R.homeTip=(await pg.$('#qk-tip'))===null;
  await pg.evaluate(()=>{location.hash='#/settings'}); await pg.waitForTimeout(200);
  R.settings=await pg.$eval('#qk-status',e=>e.textContent+' | '+e.closest('a').getAttribute('href'));
  await pg.click('#qk-status'); await pg.waitForSelector('#pin-card'); R.opensSecurity=await vis('#pin-card');
  // parol o'rnatish
  const dlg=async v=>{await pg.waitForSelector('#dlg-in'); await pg.fill('#dlg-in',v); await pg.click('#dlg-ok'); await pg.waitForTimeout(150)};
  await pg.click('#pw-set'); await dlg(words.join(' ')); await dlg('Mening-Parol-2026'); await dlg('Mening-Parol-2026'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes('o\'rnatildi'),null,{timeout:20000});
- await pg.evaluate(()=>{location.hash='#/home'}); await pg.waitForTimeout(200); R.homeTipAfterPw=await vis('#qk-tip');
+ await pg.evaluate(()=>{location.hash='#/home'}); await pg.waitForTimeout(200);
  await pg.evaluate(()=>{location.hash='#/settings'}); await pg.waitForTimeout(200); R.settingsAfter=await pg.$eval('#qk-status',e=>e.textContent);
  // parolni o'chirib, kirish sahifasida maslahat
  await pg.evaluate(()=>{location.hash='#/security'}); await pg.click('#pin-off'); await pg.waitForSelector('#dlg-ok'); await pg.click('#dlg-ok'); await pg.waitForTimeout(200);
- await pg.evaluate(()=>{location.hash='#/home'}); await pg.waitForTimeout(200); R.tipBackAfterOff=await vis('#qk-tip');
- await pg.click('#qk-hide'); R.tipHidden=!(await vis('#qk-tip'));
+ await pg.evaluate(()=>{location.hash='#/home'}); await pg.waitForTimeout(200);
  await pg.click('#lock'); await pg.waitForSelector('#go'); R.loginHint=(await pg.$$eval('#pane-import .mut, .mut',e=>e.map(x=>x.textContent).filter(t=>t.includes('Kirish usuli')))).length;
  const ins=await pg.$$('#wb input'); for(let i=0;i<words.length;i++) await ins[i].fill(words[i]); await pg.click('#go'); await pg.waitForSelector('.page:not([hidden])',{timeout:30000});
- R.tipStaysHidden=!(await vis('#qk-tip'));
  // parol bor: kirish sahifasida maslahat yo'q, parol maydoni bor
  await pg.evaluate(()=>{location.hash='#/security'}); await pg.click('#pw-set'); await dlg(words.join(' ')); await dlg('Mening-Parol-2026'); await dlg('Mening-Parol-2026'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes('o\'rnatildi'),null,{timeout:20000});
  await pg.click('#lock'); await pg.waitForSelector('#pin-in'); R.loginWithPw={hint:(await pg.$$eval('.mut',e=>e.map(x=>x.textContent).filter(t=>t.includes('Kirish usuli')))).length,pwField:await pg.$$eval('#pin-in',e=>e.length)};
