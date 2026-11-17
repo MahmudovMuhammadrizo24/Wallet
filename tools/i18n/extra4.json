@@ -1,0 +1,6 @@
+{
+"{n} kun": {"en":"{n} days","ru":"{n} дней","tr":"{n} gün","ar":"{n} يوم","zh":"{n} 天"},
+"Eng past": {"en":"Lowest","ru":"Минимум","tr":"En düşük","ar":"الأدنى","zh":"最低"},
+"Eng baland": {"en":"Highest","ru":"Максимум","tr":"En yüksek","ar":"الأعلى","zh":"最高"},
+"Narxlar grafigi" : {"en":"Price chart","ru":"График цены","tr":"Fiyat grafiği","ar":"الرسم البياني للسعر","zh":"价格图表"}
+}
