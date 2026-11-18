@@ -1,8 +1,8 @@
-const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const { chromium } = require('playwright'); const F=require('./_flat.js'); const http=require('http'),fs=require('fs'),path=require('path');
 const [,, dir, port] = process.argv;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
 const R={}; const errs=[]; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
-const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/shots/';
+const SH=(require('os').tmpdir()+'/hamyon-shots/');
 (async()=>{
  const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:390,height:844},colorScheme:'light',serviceWorkers:'block'}); const pg=await ctx.newPage();
  pg.on('pageerror',e=>errs.push(e.message)); pg.on('console',m=>{if(m.type()==='error'&&!/Failed to load|net::ERR/.test(m.text()))errs.push(m.text().slice(0,200))});
@@ -11,8 +11,8 @@ const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratc
  const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
  for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
  await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
- await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(1200);
- const pickers=async()=>{const nets=await pg.$$eval('#list .ngb',e=>e.map(b=>b.dataset.net));const o={};for(const n of nets){await pg.click('#list .ngb[data-net='+n+']');await pg.waitForSelector('#tk-sheet');o[n]=await pg.$$eval('#sh-l button[data-k]',e=>e.map(b=>b.dataset.k));await pg.keyboard.press('Escape');await pg.waitForSelector('#tk-sheet',{state:'detached'})}return o};
+ await pg.click('#nav-assets'); await pg.waitForSelector('#net-list li'); await pg.waitForTimeout(1200);
+ const pickers=()=>F.pickers(pg);
  await pg.route(u=>!/^http:\/\/localhost/.test(u.href),async r=>{const u=r.request().url(); const J=o=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(o)}); if(/coingecko/.test(u))return J({bitcoin:{usd:60000,usd_24h_change:2},ethereum:{usd:3000,usd_24h_change:-1},tether:{usd:1,usd_24h_change:0}}); return r.abort()});
  await pg.waitForTimeout(500);
  // Bosh sahifa: gradient hero, 3 tugma, bitta sariq
@@ -20,15 +20,11 @@ const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratc
  R.hero=hero; ok('heroGradient',/linear-gradient/.test(hero.bg)&&hero.col==='rgb(255, 255, 255)'); ok('heroOneYellow',hero.yellow===1&&hero.btns.length===3);
  ok('hchgExists',await pg.$('#hchg')!==null);
  // Aktivlar: sarlavha + pill + chiplar
- await pg.click('#nav-assets'); await pg.waitForSelector('#list tr.ar'); await pg.waitForTimeout(600);
+ await pg.click('#nav-assets'); await pg.waitForSelector('#net-list li'); await pg.waitForTimeout(600);
  ok('addPillLinks',await pg.$eval('#as-add',a=>a.getAttribute('href')==='#/add'&&getComputedStyle(a).backgroundColor==='rgb(255, 199, 44)'));
- const chips0=await pg.$$eval('#net-chips .chip',e=>e.map(x=>x.innerText)); R.chips0=chips0; ok('chipsStartHammasi',chips0[0]==='Hammasi'&&chips0.length>=3);
- ok('groupNamesTarmogi',(await pg.$$eval('#list tr.ng th',e=>e.map(x=>x.innerText))).every(x=>/tarmog'i/.test(x)));
- ok('rowsNameFirst',await pg.$$eval('#list tr.ar .a-n',e=>e.every(x=>x.textContent.trim()&&!/Asosiy hamyon/.test(x.textContent))));
- // filtr
- const n0=await pg.$$eval('#list tr.ar',e=>e.length); await pg.click('#net-chips .chip:nth-child(2)'); const n1=await pg.$$eval('#list tr.ar',e=>e.length); R.filter={n0,n1};
- ok('filterNarrows',n1>0&&n1<n0&&await pg.$$eval('#list tr.ng',e=>e.length)===1&&await pg.$eval('#net-chips .chip[aria-pressed=true]',e=>e.innerText!=='Hammasi'));
- await pg.click('#net-chips .chip:nth-child(1)'); ok('filterAll',await pg.$$eval('#list tr.ar',e=>e.length)===n0);
+ await F.goNet(pg,'BTC'); await pg.waitForSelector('#list li.ar');
+ ok('rowsNameFirst',await pg.$$eval('#list li.ar .a-n',e=>e.every(x=>x.textContent.trim()&&!/Asosiy hamyon/.test(x.textContent))));
+ const n0=await pg.$$eval('#list li.ar',e=>e.length);
  // qator: ⋯ menyu
  const menus=await pg.$$eval('#list [data-act=menu]',e=>e.length); ok('menuPerRow',menus===n0);
  ok('menuTarget44',await pg.$$eval('#list [data-act=menu]',e=>e.every(b=>{const r=b.getBoundingClientRect();return r.width>=43.5&&r.height>=43.5})));

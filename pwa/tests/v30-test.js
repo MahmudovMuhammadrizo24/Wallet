@@ -1,0 +1,31 @@
+const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const [,, dir, port] = process.argv;
+const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
+const R={}; const errs=[]; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
+const SH=(require('os').tmpdir()+'/hamyon-shots/');
+(async()=>{
+ const W=+process.env.VW||390;
+ const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:W,height:844},colorScheme:'light',serviceWorkers:'block'}); const pg=await ctx.newPage();
+ pg.on('pageerror',e=>errs.push(e.message)); pg.on('console',m=>{if(m.type()==='error'&&!/Failed to load|net::ERR/.test(m.text()))errs.push(m.text().slice(0,200))});
+ await pg.route(u=>!/^http:\/\/localhost/.test(u.href),r=>r.abort());
+ const audit=async tag=>pg.evaluate(()=>{const vis=e=>{const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.visibility!=='hidden'&&s.display!=='none'&&!e.closest('[hidden]')};
+   const small=[...document.querySelectorAll('button,a[href],select,input:not([type=hidden]):not([type=file]),[role=tab]')].filter(vis).filter(e=>{const r=e.getBoundingClientRect();return r.height<43.5||r.width<43.5}).map(e=>(e.id||e.className||e.tagName)+':'+Math.round(e.getBoundingClientRect().width)+'x'+Math.round(e.getBoundingClientRect().height));
+   const noname=[...document.querySelectorAll('button,a[href],input:not([type=hidden]),select')].filter(vis).filter(e=>!(e.getAttribute('aria-label')||e.innerText.trim()||e.labels&&e.labels.length||e.placeholder||e.title)).map(e=>e.id||e.className||e.tagName);
+   return {hscroll:document.documentElement.scrollWidth>innerWidth+1,small,noname}});
+ const shot=n=>pg.screenshot({path:SH+'j-'+n+'.png'});
+ await pg.goto(`http://localhost:${port}/index.html`); await pg.waitForSelector('#t-create');
+ const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
+ for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]); await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
+ const dlg=async v=>{await pg.waitForSelector('#dlg-in'); await pg.fill('#dlg-in',v); await pg.click('#dlg-ok'); await pg.waitForTimeout(150)}; const ph=words.join(' ');
+ await pg.evaluate(()=>{location.hash='#/security'}); await pg.waitForSelector('#pin-set');
+ const tryPin=async p=>{await pg.click('#pin-set'); await dlg(ph); await dlg(p); await pg.waitForTimeout(300); return pg.$eval('#pin-note',e=>e.textContent)};
+ R.m6=await tryPin('739158'); ok('sixDigitRejected',/8 dan 12/.test(R.m6)&&(await pg.evaluate(()=>localStorage.getItem('cw_pin')))===null);
+ R.m7=await tryPin('7391584'); ok('sevenDigitRejected',/8 dan 12/.test(R.m7));
+ R.m13=await tryPin('7391584629183'); ok('thirteenRejected',/8 dan 12/.test(R.m13));
+ R.weak8=await tryPin('12345678'); ok('weakEightRejected',/oson/.test(R.weak8)); R.weak8b=await tryPin('00000000'); ok('zerosRejected',/oson/.test(R.weak8b));
+ R.letters=await tryPin('7391abcd'); ok('lettersRejected',/8 dan 12/.test(R.letters));
+ await pg.click('#pin-set'); await dlg(ph); await dlg('73915846'); await dlg('73915846'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes("o'rnatildi"),null,{timeout:30000}); ok('eightDigitAccepted',true);
+ // eski 6 xonali PIN ochilishda ishlayveradi
+ await pg.evaluate(async p=>{await pinSeal(p,'739158','pin')},ph); await pg.click('#lock'); await pg.waitForSelector('#pin-in'); await pg.fill('#pin-in','739158'); await pg.click('#pin-go'); await pg.waitForSelector('.page:not([hidden])',{timeout:40000}); ok('legacySixDigitStillUnlocks',true);
+ R.errs=errs; ok('noJsErrors',errs.length===0); console.log(JSON.stringify(R,null,1)); await b.close(); srv.close(); process.exit(bad?1:0);
+})().catch(e=>{console.log('FAIL',String(e.stack).slice(0,700));console.log(JSON.stringify(R,null,1));process.exit(1)});

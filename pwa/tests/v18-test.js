@@ -1,7 +1,7 @@
-const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const { chromium } = require('playwright'); const F=require('./_flat.js'); const http=require('http'),fs=require('fs'),path=require('path');
 const [,, dir, port] = process.argv;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
-const R={}; const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/shots/';
+const R={}; const SH=(require('os').tmpdir()+'/hamyon-shots/');
 (async()=>{
  const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:390,height:844},colorScheme:'dark',serviceWorkers:'block'}); const pg=await ctx.newPage(); const errs=[];
  pg.on('pageerror',e=>errs.push(e.message)); pg.on('console',m=>{if(m.type()==='error'&&!/Failed to load|net::ERR/.test(m.text()))errs.push(m.text().slice(0,200))});
@@ -12,10 +12,10 @@ const R={}; const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5
  await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
  await pg.click('#nav-add'); await pg.waitForSelector('#tk-add');
  for(const k of ['USDT_BSC','USDC_ERC20','USDT_POLYGON','USDT_SOLANA','USDT_ARBITRUM']){await pg.selectOption('#tk-sel',k); await pg.click('#tk-add'); await pg.waitForTimeout(250)}
- await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(1500);
- R.structure=await pg.$$eval('#list > tr:not(.ngp-row)',e=>e.map(x=>x.classList.contains('ng')?'## '+x.querySelector('th').innerText.replace(/\s+/g,' '):'   '+(x.querySelector('.a-n')||{}).innerText.replace(/\s+/g,' ')));
- R.rowCount=await pg.$$eval('#list > tr:not(.ng):not(.ngp-row)',e=>e.length); R.itemCount=await pg.evaluate(()=>data.items.length);
- R.btnWorks=await (async()=>{const id=await pg.$eval('#list tr:not(.ng) button[data-act=addr]',b=>b.dataset.id); await pg.click('#list tr:not(.ng) button[data-act=addr]'); await pg.waitForTimeout(400); return (await pg.evaluate(()=>location.hash))+' / id '+id})();
+ await pg.click('#nav-assets'); await pg.waitForSelector('#net-list li'); await pg.waitForTimeout(1500);
+ const FL=await F.flat(pg); R.structure=FL.flatMap(g=>['## '+g.head,...g.rows.map(r=>'   '+r.name)]);
+ R.rowCount=FL.reduce((a,g)=>a+g.rows.length,0); R.itemCount=await pg.evaluate(()=>data.items.length);
+ R.btnWorks=await (async()=>{await pg.evaluate(()=>{location.hash='#/net/BTC'}); await pg.waitForSelector('#list button[data-act=addr]'); const id=await pg.$eval('#list button[data-act=addr]',b=>b.dataset.id); await pg.click('#list button[data-act=addr]'); await pg.waitForTimeout(400); return (await pg.evaluate(()=>location.hash))+' / id '+id})();
  await pg.evaluate(()=>{location.hash='#/assets'}); await pg.waitForTimeout(300);
  await pg.screenshot({path:SH+'v18-assets.png',fullPage:true});
  await pg.evaluate(()=>{location.hash='#/send'}); await pg.waitForSelector('#pick:not([hidden])'); await pg.waitForTimeout(300);

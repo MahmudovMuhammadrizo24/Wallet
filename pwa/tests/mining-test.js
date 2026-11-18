@@ -78,7 +78,7 @@ const summarize = core => ({ contrastMeasured: core.contrast.measured, contrastC
     await pg.screenshot({ path: SH + `m-${scheme}-home.png` });
     const homeProbe = summarize(await probe(pg, `m-${scheme}-home`));
     calls = [];
-    await pg.click('.tipcard a[href="#/mining"]'); await pg.waitForSelector('#mn-net .stats'); await pg.waitForTimeout(900);
+    await pg.evaluate(()=>{location.hash='#/mining'}); await pg.waitForSelector('#mn-net .stats'); await pg.waitForTimeout(900);
     await pg.screenshot({ path: SH + `m-${scheme}-top.png` });
     await pg.screenshot({ path: SH + `m-${scheme}-full.png`, fullPage: true });
     const A = out[scheme] = await grab(pg);
@@ -121,22 +121,22 @@ const summarize = core => ({ contrastMeasured: core.contrast.measured, contrastC
     out.viaSettingsNav = await pg.$eval('#nav-wallet', e => e.getAttribute('aria-current'));
     await pg.click('#back'); await pg.waitForTimeout(400); out.afterBack = await pg.evaluate(() => location.hash); await ctx.close(); }
   // ---------- G. xato holatlari
-  { const mode = { fail: true }; const { ctx, pg, errs } = await newWallet(b, mode); await pg.click('.tipcard a[href="#/mining"]'); await pg.waitForSelector('#mn-net .empty'); await pg.waitForTimeout(300);
+  { const mode = { fail: true }; const { ctx, pg, errs } = await newWallet(b, mode); await pg.evaluate(()=>{location.hash='#/mining'}); await pg.waitForSelector('#mn-net .empty'); await pg.waitForTimeout(300);
     out.fail = await grab(pg); await pg.screenshot({ path: SH + 'm-dark-fail.png', fullPage: true });
     mode.fail = false; await pg.click('#mn-refresh'); await pg.waitForSelector('#mn-net .stats'); await pg.waitForTimeout(300);
     out.failRetry = await grab(pg); out.failErrs = errs; await ctx.close(); }
-  { const mode = { noReward: true }; const { ctx, pg, errs } = await newWallet(b, mode); await pg.click('.tipcard a[href="#/mining"]'); await pg.waitForSelector('#mn-net .stats'); await pg.waitForTimeout(300);
+  { const mode = { noReward: true }; const { ctx, pg, errs } = await newWallet(b, mode); await pg.evaluate(()=>{location.hash='#/mining'}); await pg.waitForSelector('#mn-net .stats'); await pg.waitForTimeout(300);
     out.partial = await grab(pg); out.partialErrs = errs; await pg.screenshot({ path: SH + 'm-dark-partial.png', fullPage: true }); await ctx.close(); }
-  { const mode = { numeric: true }; const { ctx, pg } = await newWallet(b, mode); await pg.click('.tipcard a[href="#/mining"]'); await pg.waitForSelector('#mn-net .stats'); await pg.waitForTimeout(300);
+  { const mode = { numeric: true }; const { ctx, pg } = await newWallet(b, mode); await pg.evaluate(()=>{location.hash='#/mining'}); await pg.waitForSelector('#mn-net .stats'); await pg.waitForTimeout(300);
     out.numeric = await grab(pg); await ctx.close(); }
   // oxirgi qiymat saqlanishi: birinchi yuklash to'liq, yangilashda qisman xato
-  { const mode = {}; const { ctx, pg } = await newWallet(b, mode); await pg.click('.tipcard a[href="#/mining"]'); await pg.waitForSelector('#mn-net .stats'); await pg.waitForTimeout(300);
+  { const mode = {}; const { ctx, pg } = await newWallet(b, mode); await pg.evaluate(()=>{location.hash='#/mining'}); await pg.waitForSelector('#mn-net .stats'); await pg.waitForTimeout(300);
     out.staleBefore = await grab(pg); mode.noReward = true; await pg.click('#mn-refresh'); await pg.waitForFunction(() => !document.querySelector('#mn-refresh').disabled); await pg.waitForTimeout(300);
     out.staleAfter = await grab(pg); await pg.screenshot({ path: SH + 'm-dark-stale.png', fullPage: true });
     mode.fail = true; await pg.click('#mn-refresh'); await pg.waitForFunction(() => !document.querySelector('#mn-refresh').disabled); await pg.waitForTimeout(300);
     out.allFailAfterData = await grab(pg); await ctx.close(); }
   // ---------- H. tor ekran 320 px
-  { const { ctx, pg } = await newWallet(b, {}, 'light', { width: 320, height: 640 }); await pg.click('.tipcard a[href="#/mining"]'); await pg.waitForSelector('#mn-net .stats'); await pg.waitForTimeout(500);
+  { const { ctx, pg } = await newWallet(b, {}, 'light', { width: 320, height: 640 }); await pg.evaluate(()=>{location.hash='#/mining'}); await pg.waitForSelector('#mn-net .stats'); await pg.waitForTimeout(500);
     await pg.screenshot({ path: SH + 'm-light-320.png', fullPage: true });
     out.narrow = await pg.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
     out.narrowProbe = summarize(await probe(pg, 'm-narrow')); await ctx.close(); }

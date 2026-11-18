@@ -1,7 +1,7 @@
 const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
 const [,, dir, port] = process.argv;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
-const crypto=require('crypto'); const TR='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/tonref/node_modules/';
+const crypto=require('crypto'); const TR=(require('path').resolve(__dirname,'..','node_modules')+'/');
 const {WalletContractV4}=require(TR+'@ton/ton'); const {Address,internal,external,storeMessage,beginCell,Cell}=require(TR+'@ton/core'); const {keyPairFromSeed}=require(TR+'@ton/crypto');
 const H2=crypto.createHash('sha256').update('hamyon-test').digest('hex'); const GOOD=Address.parseRaw('0:'+H2).toString({bounceable:false,urlSafe:true}); const R={}; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
 function slip10(seed,path){let I=crypto.createHmac('sha512','ed25519 seed').update(seed).digest(),k=I.slice(0,32),c=I.slice(32);for(const i of path){const d=Buffer.alloc(37);d[0]=0;k.copy(d,1);d.writeUInt32BE((i|0x80000000)>>>0,33);I=crypto.createHmac('sha512',c).update(d).digest();k=I.slice(0,32);c=I.slice(32)}return k}

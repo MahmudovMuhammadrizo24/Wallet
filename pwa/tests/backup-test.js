@@ -11,7 +11,7 @@ const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]
  await pg.evaluate(()=>{location.hash='#/contacts'}); await pg.fill('#ct-name','Zaxira-do\'st'); await pg.fill('#ct-addr','bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq'); await pg.click('#ct-add'); await pg.waitForTimeout(400);
  await pg.evaluate(()=>{location.hash='#/add'}); await pg.selectOption('#tk-sel','USDC_ERC20'); await pg.click('#tk-add'); await pg.waitForTimeout(600);
  await pg.evaluate(()=>{location.hash='#/security'}); const dlg=async v=>{await pg.waitForSelector('#dlg-in'); await pg.fill('#dlg-in',v); await pg.click('#dlg-ok'); await pg.waitForTimeout(150)};
- await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('482915'); await dlg('482915'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes('o\'rnatildi'),null,{timeout:15000});
+ await pg.click('#pin-set'); await dlg(words.join(' ')); await dlg('48291537'); await dlg('48291537'); await pg.waitForFunction(()=>document.querySelector('#pin-note').textContent.includes('o\'rnatildi'),null,{timeout:15000});
  R.before=await pg.evaluate(()=>({items:data.items.length,book:(data.book||[]).length,pin:!!localStorage.getItem('cw_pin')}));
  await pg.evaluate(()=>{location.hash='#/backup'}); const [dl]=await Promise.all([pg.waitForEvent('download'),pg.click('#export')]); await dl.saveAs(OUT); const j=JSON.parse(fs.readFileSync(OUT,'utf8')); R.file={keys:Object.keys(j),ver:j.ver,bytes:fs.statSync(OUT).size,plainLeak:fs.readFileSync(OUT,'utf8').includes('Zaxira-do')||fs.readFileSync(OUT,'utf8').includes('bc1q')};
  // o'chirish -> tiklash

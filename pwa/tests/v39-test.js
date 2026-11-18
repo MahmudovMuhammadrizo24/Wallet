@@ -1,0 +1,25 @@
+const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const [,, dir, port] = process.argv;
+const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
+let PRICE=1.5; const R={}; const errs=[]; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
+const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/shots/';
+(async()=>{
+ const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:390,height:844},colorScheme:'light',serviceWorkers:'block'}); const pg=await ctx.newPage();
+ pg.on('pageerror',e=>errs.push(e.message)); pg.on('console',m=>{if(m.type()==='error'&&!/Failed to load|net::ERR/.test(m.text()))errs.push(m.text().slice(0,200))});
+ await pg.route(u=>!/^http:\/\/localhost/.test(u.href),r=>r.abort());
+ pg.on('pageerror',e=>errs.push(e.message));
+ await pg.goto(`http://localhost:${port}/index.html`); await pg.waitForSelector('#t-create');
+ ok('noLangOnAuth',(await pg.$$('#lang-sel,.langsel,select')).length===0);
+ const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
+ for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
+ await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000}); await pg.waitForTimeout(600);
+ const tips=await pg.$$eval('#pg-home .tipcard a',e=>e.map(a=>a.getAttribute('href'))); R.tips=tips; ok('homeOnlyPrices',tips.length===2&&tips[0]==='#/prices'&&tips[1]==='#/charts');
+ ok('noQuickTip',(await pg.$$('#qk-tip,#qk-hide')).length===0);
+ await pg.screenshot({path:SH+'v39-home.png',fullPage:true});
+ await pg.evaluate(()=>{location.hash='#/settings'}); await pg.waitForTimeout(400);
+ const set=await pg.$$eval('#pg-settings a[href="#/security"] b',e=>e.map(x=>x.textContent)); R.set=set; ok('settingsHasBoth',set.length===2);
+ ok('langInSettings',(await pg.$$('#lang-seg button')).length===6);
+ await pg.click('#lang-seg button[lang=en]'); await pg.waitForTimeout(200); ok('langSwitchWorks',(await pg.evaluate(()=>document.documentElement.lang))==='en');
+ await pg.setViewportSize({width:1440,height:900}); await pg.evaluate(()=>{location.hash='#/home'}); await pg.waitForTimeout(500); await pg.screenshot({path:SH+'v39-home-desktop.png'});
+ R.errs=errs; console.log(JSON.stringify(R,null,1)); await b.close(); srv.close(); process.exit(bad||errs.length?1:0);
+})();

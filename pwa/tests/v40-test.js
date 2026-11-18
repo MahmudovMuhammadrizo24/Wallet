@@ -1,0 +1,22 @@
+const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const [,, dir, port] = process.argv;
+const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
+let PRICE=1.5; const R={}; const errs=[]; let bad=0; const ok=(k,v)=>{R[k]=v; if(v!==true)bad++};
+const SH='/tmp/claude-0/-home-claude/71848a84-9940-5d79-a003-81e9ba5fa6d7/scratchpad/shots/';
+(async()=>{
+ const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:390,height:844},colorScheme:'light',serviceWorkers:'block'}); const pg=await ctx.newPage();
+ pg.on('pageerror',e=>errs.push(e.message));
+ await pg.route(u=>!/^http:\/\/localhost/.test(u.href),r=>r.abort());
+ await pg.goto(`http://localhost:${port}/index.html`); await pg.waitForSelector('#t-create');
+ const words=await pg.$$eval('#wb input',e=>e.map(x=>x.value)); await pg.click('#next'); await pg.waitForSelector('.vin');
+ for(const p of await pg.$$eval('.vin',e=>e.map(x=>+x.id.slice(1)))) await pg.fill('#v'+p,words[p]);
+ await pg.click('#mk'); await pg.waitForSelector('#pg-home:not([hidden])',{timeout:30000});
+ await pg.evaluate(()=>{location.hash='#/contacts'}); await pg.waitForSelector('#ct-add');
+ const BIDI='Binance-support\u202E txe.ssorG\u2066\u200b';
+ await pg.fill('#ct-name',BIDI); await pg.evaluate(()=>{const e=document.getElementById('ct-fam');e.value='BTC';e.dispatchEvent(new Event('change',{bubbles:true}));});
+ await pg.fill('#ct-addr','1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'); await pg.click('#ct-add'); await pg.waitForTimeout(200);
+ const stored = await pg.$eval('#ct-list b',e=>e.textContent); R.stored=stored;
+ ok('bidiStripped', !/[\u0000-\u001f\u200b-\u200f\u2028-\u202e\u2060-\u2069\ufeff]/.test(stored));
+ ok('nameTextKept', stored.includes('Binance-support') && stored.includes("txe.ssorG"));
+ R.errs=errs; console.log(JSON.stringify(R,null,1)); await b.close(); srv.close(); process.exit(bad||errs.length?1:0);
+})();

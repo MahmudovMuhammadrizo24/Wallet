@@ -1,4 +1,4 @@
-const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const { chromium } = require('playwright'); const F=require('./_flat.js'); const http=require('http'),fs=require('fs'),path=require('path');
 const [,, dir, port] = process.argv;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
 function dec(b,o=0){const x=b[o];if(x<0x80)return[b.slice(o,o+1),o+1];if(x<0xb8){const l=x-0x80;return[b.slice(o+1,o+1+l),o+1+l]}if(x<0xc0){const ll=x-0xb7;let l=0;for(let i=0;i<ll;i++)l=l*256+b[o+1+i];return[b.slice(o+1+ll,o+1+ll+l),o+1+ll+l]}let l,s;if(x<0xf8){l=x-0xc0;s=o+1}else{const ll=x-0xf7;l=0;for(let i=0;i<ll;i++)l=l*256+b[o+1+i];s=o+1+ll}const out=[];let p=s;while(p<s+l){const[v,n]=dec(b,p);out.push(v);p=n}return[out,s+l]}
@@ -41,8 +41,8 @@ const A58='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'; const b5
  await pg.selectOption('#tk-sel','ALL'); await pg.click('#tk-add'); await pg.waitForTimeout(600); R.addMsg=await pg.$eval('#tk-msg',e=>e.textContent);
  R.itemCount=await pg.evaluate(()=>data.items.length);
  await pg.click('#tk-add'); await pg.waitForTimeout(300); R.addAgain=await pg.$eval('#tk-msg',e=>e.textContent); R.itemCount2=await pg.evaluate(()=>data.items.length);
- await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(3500);
- R.structure=await pg.$$eval('#list > tr:not(.ngp-row)',e=>e.map(x=>x.classList.contains('ng')?'## '+x.querySelector('th').innerText.replace(/\s+/g,' '):'   '+x.querySelector('.a-n').innerText.replace(/\s+/g,' ')));
+ await pg.click('#nav-assets'); await pg.waitForSelector('#net-list li'); await pg.waitForTimeout(3500);
+ R.structure=await F.struct(pg);
  R.nullBalances=await pg.evaluate(()=>data.items.filter(it=>balances[it.id]===null||balances[it.id]===undefined).map(it=>it.coin));
  R.balSample=await pg.evaluate(()=>Object.fromEntries(['POL','ETH_ARB','BNB','USDC_BSC','WBTC_ERC20','SHIB_ERC20','USDC_SOLANA','USDC_TRC20'].map(k=>[k,balances[data.items.find(x=>x.coin===k).id]])));
  // 3) yuborish

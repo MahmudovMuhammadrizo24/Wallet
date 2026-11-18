@@ -1,0 +1,14 @@
+{
+"Faqat shu ilovada 12 so'z bilan yaratilgan hamyonlardan yuborish mumkin (Solana tokenlari (SPL) va USDT (TON) dan yuborish hali yo'q)": {
+ "en":"You can send only from wallets created with 12 words in this app (sending Solana (SPL) tokens and USDT (TON) is not supported yet)",
+ "ru":"Отправлять можно только из кошельков, созданных в этом приложении с 12 словами (отправка токенов Solana (SPL) и USDT (TON) пока недоступна)",
+ "tr":"Yalnızca bu uygulamada 12 kelimeyle oluşturulan cüzdanlardan gönderim yapılabilir (Solana (SPL) tokenları ve USDT (TON) gönderimi henüz yok)",
+ "ar":"يمكن الإرسال فقط من المحافظ المنشأة بـ 12 كلمة في هذا التطبيق (الإرسال من رموز Solana (SPL) وUSDT (TON) غير متاح بعد)",
+ "zh":"只能从本应用中用12个单词创建的钱包发送（暂不支持发送 Solana (SPL) 代币和 USDT (TON)）"},
+"Sizga {n} ta maxfiy so'z berildi. Hamyonga faqat shu so'zlar bilan kirasiz.": {
+ "en":"You have been given {n} secret words. You can access the wallet only with these words.",
+ "ru":"Вам выдано {n} секретных слов. Войти в кошелёк можно только с этими словами.",
+ "tr":"Size {n} gizli kelime verildi. Cüzdana yalnızca bu kelimelerle girebilirsiniz.",
+ "ar":"تم إعطاؤك {n} كلمة سرية. يمكنك الدخول إلى المحفظة بهذه الكلمات فقط.",
+ "zh":"已为您生成 {n} 个密语。只有使用这些单词才能进入钱包。"}
+}

@@ -1,4 +1,4 @@
-const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
+const { chromium } = require('playwright'); const F=require('./_flat.js'); const http=require('http'),fs=require('fs'),path=require('path');
 const [,, dir, port] = process.argv;
 const srv=http.createServer((q,r)=>{let p=decodeURIComponent(q.url.split('?')[0]); if(p.endsWith('/'))p+='index.html'; const f=path.join(dir,p); if(!fs.existsSync(f)){r.writeHead(404);return r.end('nf')} r.writeHead(200,{'content-type':f.endsWith('.html')?'text/html':f.endsWith('.js')?'text/javascript':'application/octet-stream'}); r.end(fs.readFileSync(f))}).listen(+port);
 function dec(b,o=0){const x=b[o];if(x<0x80)return[b.slice(o,o+1),o+1];if(x<0xb8){const l=x-0x80;return[b.slice(o+1,o+1+l),o+1+l]}if(x<0xc0){const ll=x-0xb7;let l=0;for(let i=0;i<ll;i++)l=l*256+b[o+1+i];return[b.slice(o+1+ll,o+1+ll+l),o+1+ll+l]}let l,s;if(x<0xf8){l=x-0xc0;s=o+1}else{const ll=x-0xf7;l=0;for(let i=0;i<ll;i++)l=l*256+b[o+1+i];s=o+1+ll}const out=[];let p=s;while(p<s+l){const[v,n]=dec(b,p);out.push(v);p=n}return[out,s+l]}
@@ -30,8 +30,8 @@ const abiStr=s=>'0x'+'20'.padStart(64,'0')+s.length.toString(16).padStart(64,'0'
  R.optionCount=await pg.$$eval('#tk-sel option',e=>e.length);
  for(const k of ['USDT_POLYGON','USDT_ARBITRUM','USDT_OPTIMISM','USDT_AVALANCHE','USDT_BSC','USDT_SOLANA']){await pg.selectOption('#tk-sel',k); await pg.click('#tk-add'); await pg.waitForTimeout(250)}
  await pg.selectOption('#tk-sel','USDT_BSC'); await pg.click('#tk-add'); await pg.waitForTimeout(150); R.dup=await pg.$eval('#tk-msg',e=>e.textContent);
- await pg.click('#nav-assets'); await pg.waitForSelector('#list'); await pg.waitForTimeout(2500);
- R.rows=await pg.$$eval('#list > *',e=>e.filter(x=>!x.classList.contains('ngp-row')).map(x=>x.innerText.replace(/\s+/g,' ').slice(0,100)).filter(t=>/USDT/.test(t)));
+ await pg.click('#nav-assets'); await pg.waitForSelector('#net-list li'); await pg.waitForTimeout(2500);
+ R.rows=(await F.flat(pg)).flatMap(g=>g.rows.map(r=>(g.head+' '+r.text).slice(0,100))).filter(t=>/USDT/.test(t));
  // yuborish har bir EVM tarmog'ida
  const send=async(key,amt,opts={})=>{const id=await pg.evaluate(k=>data.items.find(x=>x.coin===k).id,key); await pg.evaluate(()=>{location.hash='#/home'}); await pg.waitForTimeout(150); await pg.evaluate(i=>{location.hash='#/asset/'+i+'/send'},id); await pg.waitForSelector('#sd-to'); await pg.fill('#sd-to',REC); await pg.fill('#sd-amt',amt); await pg.click('#sd-next');
   await pg.waitForFunction(()=>{const r=document.querySelector('#sd-review');return (r&&!r.hidden&&r.querySelector('.rv'))||(m=>m.length>0&&!/Hisoblan/.test(m))(document.querySelector('#sd-msg').textContent)},null,{timeout:20000});
